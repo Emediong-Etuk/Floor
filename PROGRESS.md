@@ -223,7 +223,7 @@ Done:
 - README rewritten: problem, what it does, proof table, how it works, trust model (including
   the owner's power to replace the oracle), run/env/tests, limitations, roadmap.
 - `docs/screenshots/` (iPhone 13, from a real anvil run via `e2e/screenshots.mjs`).
-- `docs/demo-script.md`, `docs/pitch-outline.md` (full), `docs/submission.md`.
+- `docs/demo-script.txt`, `docs/pitch-outline.md` (full), `docs/submission.md`.
 - `docs/architecture.md` diagram updated to the as-built design (on-demand keeper, push).
 
 Verify:

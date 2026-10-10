@@ -23,7 +23,7 @@ depends on being awake at 7 AM.
 | Verified testnet contract addresses                                                                      | ✅    | `docs/addresses.md` (7 contracts, verified on MonadVision).                                                                                                           |
 | Verified mainnet addresses and at least one mainnet fill tx                                              | ⏳    | Needs Greg's go-ahead and about 1.5 MON (`docs/deploy.md`), a 0x API key and a funded keeper. Until then: the mainnet-fork rehearsal and fork tests are the evidence. |
 | README: problem, solution, screenshots, architecture, trust model, run, env, tests, limitations, roadmap | ✅    | `README.md`. Add the live URL and the video link once they exist.                                                                                                     |
-| Demo video (≤ 3 min)                                                                                     | ⏳    | Script and recording checklist: `docs/demo-script.md`. Record after the Vercel deploy.                                                                                |
+| Demo video (≤ 3 min)                                                                                     | ⏳    | Script and recording checklist: `docs/demo-script.txt`. Record after the Vercel deploy.                                                                                |
 | Pitch outline                                                                                            | ✅    | `docs/pitch-outline.md`. Team section needs Greg's line and links.                                                                                                    |
 
 ## Phase 6 polish
@@ -45,7 +45,7 @@ depends on being awake at 7 AM.
    Done.
 4. Optional: mainnet deploy and one tiny real fill through 0x (`docs/deploy.md`,
    `docs/keeper.md`).
-5. Record the demo with `docs/demo-script.md`; upload it.
+5. Record the demo with `docs/demo-script.txt`; upload it.
 6. Put the video link at the top of `README.md` (the live URL is already there).
 7. Fill in the Team section of `docs/pitch-outline.md`.
 8. Submit: repo URL, live URL, video, contract addresses (testnet, plus mainnet if deployed),

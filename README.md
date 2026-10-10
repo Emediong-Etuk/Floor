@@ -185,7 +185,7 @@ the app e2e on every push.
 8. An open keeper network and Kuru as a second venue.
 
 Pitch: [`docs/pitch-outline.md`](docs/pitch-outline.md) · Demo script:
-[`docs/demo-script.md`](docs/demo-script.md) · Submission checklist:
+[`docs/demo-script.txt`](docs/demo-script.txt) · Submission checklist:
 [`docs/submission.md`](docs/submission.md) · Status: [`PROGRESS.md`](PROGRESS.md)
 
 ## License

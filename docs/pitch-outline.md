@@ -29,7 +29,7 @@ profit; whichever is hit first wins.
 ## 3. Demo
 
 Live on Monad testnet: protect → crash the price 20% → the keeper sells **0.4 s after the floor
-was hit** → push → receipt in Activity. Script: [`demo-script.md`](demo-script.md).
+was hit** → push → receipt in Activity. Script: [`demo-script.txt`](demo-script.txt).
 
 Screenshots: [`screenshots/`](screenshots/).
 
