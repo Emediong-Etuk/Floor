@@ -134,7 +134,7 @@ export default function DemoPage() {
               {faucet && <p className="text-sm text-accent">{faucet}</p>}
             </>
           ) : (
-            <Button onClick={() => login()}>Sign in first</Button>
+            <Button onClick={login}>Sign in first</Button>
           )}
         </Card>
 
