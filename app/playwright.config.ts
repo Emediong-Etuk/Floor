@@ -15,4 +15,10 @@ export default defineConfig({
       : {},
     trace: 'retain-on-failure',
   },
+  // Both specs share one wallet and one chain, so order matters: the lifecycle flow first (it
+  // resets the demo price at the end), then the accessibility audit.
+  projects: [
+    { name: 'flow', testMatch: 'floor.spec.ts' },
+    { name: 'a11y', testMatch: 'a11y.spec.ts', dependencies: ['flow'] },
+  ],
 });

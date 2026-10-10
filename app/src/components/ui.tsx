@@ -17,7 +17,7 @@ export function Screen({
   action?: ReactNode;
 }) {
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pb-28 pt-4">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pb-28 pt-4">
       {(title || back) && (
         <header className="mb-4 flex items-center gap-3">
           {back && (
@@ -37,7 +37,7 @@ export function Screen({
       <p className="mt-10 text-center text-xs text-muted">
         Hackathon software · not audited · testnet demo
       </p>
-    </div>
+    </main>
   );
 }
 
@@ -180,6 +180,16 @@ export function ErrorNote({ message }: { message?: string }) {
       className="rounded-xl border border-danger/30 bg-danger/10 p-3 text-sm text-danger"
     >
       {message}
+    </p>
+  );
+}
+
+/** Shown when chain reads fail, so an RPC outage never looks like "you have nothing". */
+export function OfflineNote({ show }: { show: boolean }) {
+  if (!show) return null;
+  return (
+    <p role="status" className="mb-4 rounded-xl bg-warn/15 p-3 text-sm text-warn">
+      Can&apos;t reach the Monad network right now. Retrying…
     </p>
   );
 }

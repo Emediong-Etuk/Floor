@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { OrderStatus } from '@floor/shared';
-import { Card, Screen, Skeleton } from '@/components/ui';
+import { Card, OfflineNote, Screen, Skeleton } from '@/components/ui';
 import { findFillTx } from '@/lib/activity';
 import { tokenByAddress, txUrl, USDC } from '@/lib/config';
 import { amount, timeAgo, usd } from '@/lib/format';
@@ -31,8 +31,11 @@ export default function ActivityPage() {
           </Link>{' '}
           to see your activity.
         </Card>
-      ) : orders.isLoading ? (
-        <Skeleton className="h-40" />
+      ) : !orders.data ? (
+        <>
+          <OfflineNote show={orders.isError} />
+          <Skeleton className="h-40" />
+        </>
       ) : past.length === 0 ? (
         <Card className="text-center text-sm text-muted">No sales, cancels or expiries yet.</Card>
       ) : (
