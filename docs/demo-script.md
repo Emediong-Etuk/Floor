@@ -1,119 +1,171 @@
-# Demo script (3 minutes)
+# Demo video script (3 minutes)
 
-This follows build prompt §13, adapted to what exists today: a testnet demo with an
-on-demand keeper (D-011) and mainnet evidence from fork tests. Times are targets. Speak
-slowly; the app is fast enough that you'll have spare seconds.
+The video has two parts. **Part A** is the voice-over: read it out loud and record it on its
+own. **Part B** is the screen recording: what to tap in each scene. Scene numbers match
+between the two. Record the screen first, then the voice, then put them together.
 
-**Before you record:** run the [recording checklist](#recording-checklist) below.
+The voice-over is about 360 words. At a calm speaking pace that's about 2:40, which leaves
+room for pauses.
 
-## Script
+---
 
-### 0:00–0:20 · Problem
+## Part A · Voice-over
 
-> "This is Tunde. He holds $300 of MON. At 3am it drops 25%, and he's asleep. Exchanges have
-> stop-losses, but onchain, nobody watches your wallet for you. You can't watch charts 24/7."
+> Lines in [square brackets] are notes to you, not words to read.
 
-On screen: the welcome screen on a phone ("A safety net for your crypto.").
+### Scene 1 · The hook (0:00–0:15)
 
-### 0:20–0:40 · Login
+It's 3 a.m. Your phone is on silent.
+The coin you've been saving in just dropped 25%.
+By the time you wake up, the money is gone.
 
-> "Floor is a safety net. I sign in with my email: no seed phrase, no extension."
+### Scene 2 · Why I built this (0:15–0:35)
 
-- Tap **Continue with email**, enter the email and the code. Privy creates an embedded wallet.
-- Home shows your tokens. If it's a fresh account, open **Demo** → **Mint test tokens** first
-  (do this before recording, so Home already has WMON).
+I'm Greg, and I'm from Nigeria.
+Many people I know keep their savings in crypto, on their phones.
+Big exchanges let you say, "sell if the price falls this low."
+But when you hold your own coins, nobody watches them for you.
+So I built Floor.
 
-### 0:40–1:20 · Protect
+[Swap the middle lines for a real moment if you have one: a friend, a family member or you,
+losing money overnight. One true sentence beats three general ones.]
 
-> "I want to protect my MON. I tap Protect."
+### Scene 3 · Sign in (0:35–0:50)
 
-- Tap **Protect** next to WMON.
-- Tap **50%** for the amount.
-- Drag the floor slider to **−10%**. Read the trigger price out loud.
-- Toggle **Also cash out if it goes up** and leave it at **+20%**.
-- Point at the plain-English summary:
-  > "It says exactly what will happen: if WMON falls to this price, sell for USDC. If it rises
-  > to this one, cash out. Whichever comes first. The fee is 0.1%, only if it sells."
-- Tap **Approve exact amount**, then **Turn on protection**.
-  > "I only approve the amount I'm protecting. My tokens stay in my wallet."
-- Tap **Done**. Home shows the card with its distance-to-floor bar and a **Protected** chip.
+Floor is a safety net for your crypto.
+I sign in with my email.
+No app store. No secret words to write down.
 
-### 1:20–1:50 · The crash
+### Scene 4 · Set a floor (0:50–1:30)
 
-> "Now let's crash the market."
+I have some MON. I tap Protect.
+I'll protect half of it.
 
-- Open **Demo**. Under **3. Move the price**, tap **−20%**.
-- The panel shows the price move, then: **"Keeper sold protection #1 0.4 s after the floor
-  was hit"**. Tap **view** to open the fill on MonadVision.
-  > "The keeper sold in under a second, onchain, on Monad testnet."
-- If push is set up, the phone shows **"Floor hit: sold 1,000 WMON · You got 19.94 USDC…"**.
-  Hold the phone up for it.
-- Open **Activity**: the receipt shows the amount sold, the USDC received, the fee and the tx.
+Now I set my floor.
+If MON falls 10%, Floor sells it for digital dollars.
 
-### 1:50–2:20 · Trust
+And if MON goes up 20%, Floor cashes out, so I keep the profit.
+Whichever happens first.
 
-> "Why should anyone trust a bot with this? You don't have to. The contract checks the oracle
-> price itself, and it enforces a minimum output based on that price. So anyone can execute,
-> and nobody can cheat: not a keeper, not us."
+Floor tells me, in plain words, exactly what it will do.
 
-- Back on **Demo**, turn on **Liquidity gap** ("the market now pays 3% under the oracle"),
-  protect a little more WMON, and crash again. The keeper reports it is waiting for liquidity
-  instead of selling cheap. Turn the gap off and it sells.
-  > "If the market can't pay a fair price, Floor waits instead of dumping your tokens."
-- Mainnet evidence, pick whichever exists on the day:
-  - **With a mainnet deploy:** show the real fill through 0x on MonadVision.
-  - **Without one:** show the mainnet-fork test (`forge test --match-contract Deploy -vv` with
-    `MONAD_MAINNET_RPC_URL`), which deploys against real Pyth prices, and the 75 passing
-    contract tests. Say plainly: "Live mainnet launch is next; tonight this is testnet."
+I turn it on.
+My coins stay in my wallet.
+Floor can only touch the amount I picked, and only when the price hits my line.
 
-### 2:20–2:40 · Why Monad
+### Scene 5 · The crash (1:30–2:00)
 
-> "On most chains, a stop-loss fills blocks after the crash, at a worse price, and the gas
-> eats a small position. Monad has 400 ms blocks and cheap gas. Our keeper filled 474 ms after
-> the crash confirmed on testnet. That makes a $20 protection worth having."
+Now let's crash the market.
+I drop the price of MON by 20%, all at once.
 
-### 2:40–3:00 · Next
+Done. Floor sold in under a second.
 
-> "Next: trailing floors that rise with the price, a Telegram bot, sponsored gas so users
-> never need MON, and Floor as a widget any Monad wallet can embed. We're starting with a
-> pilot in my West African crypto community. Floor: set it, and sleep."
+And here's the alert on my phone: what sold, and how much I got.
 
-End on the Home screen with the protection card.
+Here's my receipt. And here's the sale on Monad's public record, for anyone to check.
 
-## Recording checklist
+### Scene 6 · Can you trust it? (2:00–2:25)
 
-### Accounts and config (the day before)
+You might ask: what stops someone from selling my coins too early, or too cheap?
+The rules do.
+Before any sale, Floor's code checks the real price for itself.
+And it refuses to sell below the limit I set.
+A bot can't bend those rules. A stranger can't either.
 
-- [ ] Vercel deploy is live in demo mode (`docs/app.md` → Deploy to Vercel).
-- [ ] Privy: email login works on the Vercel domain (allowed origins set).
-- [ ] Push: VAPID keys and Upstash set; alerts turned on and a test push received on the phone
-      you'll record with. On iPhone, the app is installed to the Home Screen first.
-- [ ] The deployer (demo operator) has at least 2 testnet MON for faucet drips and price moves.
-- [ ] The keeper key (or the operator key) has at least 1 testnet MON.
-- [ ] `/demo` → Keeper card shows the keeper address and balance (not "not configured").
+### Scene 7 · Why Monad (2:25–2:40)
 
-### Right before recording
+This only works because Monad is fast and cheap.
+A sale lands in under a second.
+And it costs so little that protecting twenty dollars still makes sense.
 
-- [ ] Sign in on the recording phone with a fresh email (or one with no open protections).
-- [ ] **Demo → Mint test tokens** so Home shows 10,000 WMON.
-- [ ] **Demo → Reset to the starting price** for WMON (from a previous take).
-- [ ] **Liquidity gap is off.**
-- [ ] Do one full dry run: protect → −20% → sold. Then reset the price.
-- [ ] Phone: Do Not Disturb **off** for the browser/PWA (so the push shows), other notifications
-      silenced, battery icon reasonable, brightness up, dark mode on.
-- [ ] Explorer tabs pre-loaded: the FloorOrders contract and the 474 ms fill tx
-      (`docs/keeper.md`).
-- [ ] If showing the fork test: terminal open in `contracts/` with large font, command typed.
+### Scene 8 · The close (2:40–3:00)
 
-### Capture
+Floor is free to set up.
+It takes a tenth of one percent, and only when it sells.
 
-- [ ] Record the phone screen (iOS Screen Recording or Android's recorder) in portrait at 1080p
-      or better. Optionally composite it next to a laptop for the explorer and terminal bits.
-- [ ] Record the voice separately or in a quiet room. Keep the total **under 3:00**.
-- [ ] Captions on the key numbers: "0.4 s after the floor was hit", "0.1% fee only when it
-      sells", "474 ms on Monad testnet".
+Next, I'm taking Floor to my crypto community in West Africa, with alerts on Telegram.
 
-### After
+Set your floor. Then go to sleep.
 
-- [ ] Upload (YouTube unlisted or Loom) and put the link in the README and the submission.
-- [ ] Reset the demo price so judges start from the normal price.
+---
+
+## Part B · Screen recording
+
+Record your phone screen in portrait. Each scene lists what to show and what to tap.
+
+### Before you record
+
+1. **Clear the old test protections.** Cancel them on Home, or ask Claude to sell them.
+   Otherwise the crash in Scene 5 sells them too, and you get extra alerts on camera.
+2. In **Settings**, turn **Sale alerts** off, then log out.
+3. Sign in with a **new email**.
+4. Open **Demo** → **Mint test tokens**. Home should now show 10,000 WMON.
+5. **Settings → Sale alerts → Turn on.** Allow notifications and confirm. An "alerts are on"
+   push arrives.
+6. On **Demo**, check that WMON shows **$0.0250** (if not, tap **Reset to the starting
+   price**) and that **Liquidity gap** is off.
+7. Log out again, so Scene 3 starts on the welcome screen. Your test tokens stay with that
+   email.
+8. On the phone: Do Not Disturb off, other app alerts muted, brightness up, battery charged.
+9. Do one full practice run of Scenes 3–5. Then cancel the practice protection on Home and
+   reset the price on Demo.
+
+### Scene 1 · The hook
+
+- Black screen with the text **"3:00 AM"**, added when you edit. Or film your phone face-down
+  on a bedside table at night.
+
+### Scene 2 · Why I built this
+
+- Either film yourself talking to the camera, or show the Floor welcome screen
+  ("A safety net for your crypto").
+
+### Scene 3 · Sign in
+
+1. Start on the welcome screen.
+2. Tap **Continue with email**.
+3. Type the new email, tap **Submit**, then enter the code from your inbox. Cut the wait for
+   the email when you edit.
+4. Home appears with your tokens.
+
+### Scene 4 · Set a floor
+
+1. Tap **Protect** next to **WMON**.
+2. Tap **50%**.
+3. Touch the floor slider and move it back to **−10%**, so viewers see it's a slider.
+4. Turn on **Also cash out if it goes up**. Leave it at **+20%**.
+5. Scroll slowly to the plain-English summary and hold it on screen for 3 seconds.
+6. Tap **Turn on protection**. Wait for **Protection is on**.
+7. Tap **Done**. Home shows the protection card with the **Protected** label.
+
+### Scene 5 · The crash
+
+1. Open **Demo**. Under **3. Move the price**, tap **−20%**.
+2. Hold on the line **"Keeper sold protection #… 0.4 s after the floor was hit"**.
+3. Show the alert: on Android, swipe down from the top; on iPhone, lock the phone and show
+   the alert on the lock screen, then unlock. Practise this part.
+4. Open **Activity**: the receipt shows what sold, the dollars received and the fee.
+5. Tap **View tx**. The sale opens on MonadVision. Hold for 3 seconds.
+
+### Scene 6 · Can you trust it?
+
+- Open **Settings** and scroll to **How Floor keeps you safe**. Hold it on screen.
+
+### Scene 7 · Why Monad
+
+- Go back to the MonadVision page from Scene 5 and point at the time of the sale. Or show
+  Home, now empty again.
+
+### Scene 8 · The close
+
+- End on the welcome screen, or on Home. Add the Floor name and
+  **floor-delta-ruby.vercel.app** as text on screen.
+
+### After recording
+
+1. Put the voice-over over the screen recording. Cut any waiting (emails, loading).
+2. Add captions for the key numbers: **"Sold in 0.4 seconds"**, **"0.1% fee, only when it
+   sells"**, **"Live on Monad testnet"**.
+3. Keep the final video **under 3:00**.
+4. Upload it (YouTube unlisted, or Loom) and send Claude the link for the README.
+5. On **Demo**, tap **Reset to the starting price** so judges start from the normal price.
