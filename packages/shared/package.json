@@ -1,0 +1,22 @@
+{
+  "name": "@floor/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chains, token registry, ABIs and trigger/minOut math shared by the keeper and the app",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "abi:sync": "tsx scripts/sync-abis.ts",
+    "abi:check": "tsx scripts/sync-abis.ts --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "viem": "2.57.4"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15"
+  }
+}

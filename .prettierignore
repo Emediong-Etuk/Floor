@@ -1,0 +1,7 @@
+contracts/lib/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+pnpm-lock.yaml
+*.sol
+packages/shared/src/abi/generated.ts

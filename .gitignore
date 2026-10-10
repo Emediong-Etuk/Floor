@@ -1,0 +1,30 @@
+# deps / builds
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts/broadcast/**/dry-run/
+# local + mainnet-fork rehearsals (script/local-demo.sh, script/fork-live.sh)
+contracts/broadcast-rehearsal/
+
+# secrets: only .env.example files are committed
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+*.log
+
+# app
+app/test-results/
+app/playwright-report/
+app/next-env.d.ts
+app/e2e/screenshots/

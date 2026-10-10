@@ -1,0 +1,8 @@
+packages:
+  - app
+  - contracts
+  - keeper
+  - packages/*
+
+onlyBuiltDependencies:
+  - esbuild

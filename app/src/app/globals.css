@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+/* Floor is dark-first (a safety net you check at 3 am). Tokens drive every color. */
+:root {
+  --bg: #0b0f0e;
+  --surface: #131a18;
+  --surface-2: #1a2320;
+  --border: #24302c;
+  --text: #ecf3f0;
+  --muted: #8fa29b;
+  --accent: #34d399;
+  --accent-ink: #052e1f;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input[type='range'] {
+  accent-color: var(--accent);
+  height: 2.25rem;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

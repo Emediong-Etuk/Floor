@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Contracts (forge)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      # Pyth's Solidity SDK comes from npm (contracts/package.json).
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        working-directory: .
+      # Monad execution support needs Foundry >= 1.8.0 (docs.monad.xyz/tooling-and-infra/toolkits/foundry).
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.1
+      - run: forge --version
+      - run: forge fmt --check
+      - run: forge build --sizes
+      - run: forge test -vvv
+      - run: forge coverage --report summary --no-match-coverage "(test|script)"
+      # Generated ABIs in packages/shared must match this build.
+      - run: pnpm --filter @floor/shared abi:check
+        working-directory: .
+      # Keeper end-to-end on anvil (needs Foundry, so it runs here; skipped in the TS job).
+      - run: pnpm --filter @floor/keeper exec vitest run test/e2e.anvil.test.ts
+        working-directory: .
+
+  typescript:
+    name: TypeScript (shared, keeper, app)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --check .
+      - run: pnpm typecheck
+      - run: pnpm test
+      # Privy validates its app id in the browser only; any value builds.
+      - run: pnpm --filter @floor/app build
+        env:
+          NEXT_PUBLIC_PRIVY_APP_ID: ci-build
+          NEXT_TELEMETRY_DISABLED: '1'
+
+  app-e2e:
+    name: App e2e (anvil + Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.1
+      - run: pnpm --filter @floor/app exec playwright install --with-deps chromium
+      - run: pnpm app:e2e
