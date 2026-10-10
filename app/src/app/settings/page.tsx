@@ -7,7 +7,7 @@ import { short } from '@/lib/format';
 import { useFloorWallet } from '@/lib/wallet';
 
 export default function SettingsPage() {
-  const { address, email, authenticated, logout, login } = useFloorWallet();
+  const { address, email, walletName, authenticated, logout, login } = useFloorWallet();
   const [copied, setCopied] = useState(false);
   return (
     <Screen title="Settings">
@@ -19,6 +19,12 @@ export default function SettingsPage() {
                 <div className="flex justify-between">
                   <span className="text-muted">Signed in as</span>
                   <span>{email}</span>
+                </div>
+              )}
+              {walletName && (
+                <div className="flex justify-between">
+                  <span className="text-muted">Signed in with</span>
+                  <span>{walletName}</span>
                 </div>
               )}
               <div className="flex items-center justify-between gap-2">
@@ -44,7 +50,7 @@ export default function SettingsPage() {
               </a>
             </>
           ) : (
-            <Button onClick={login}>Sign in</Button>
+            <Button onClick={() => login()}>Sign in</Button>
           )}
         </Card>
 
