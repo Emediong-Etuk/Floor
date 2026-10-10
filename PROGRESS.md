@@ -12,7 +12,7 @@ Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exac
 | 2: Deploy                | 🔨 Testnet ✅ (verified + smoke); mainnet waits |
 | 3: Keeper                | 🔨 Testnet ✅ (fills in ~0.5 s); mainnet waits  |
 | 4: Frontend MVP          | ✅ Live on Vercel (testnet)                     |
-| 5: Notifications         | ✅ Built + tested; needs VAPID keys + Upstash   |
+| 5: Notifications         | ✅ Live; push verified on a phone               |
 | 6: Polish and submission | ✅ Done; video + live URL wait on Greg          |
 
 ## Phase 0 (2026-10-10)
@@ -200,9 +200,9 @@ Done:
     alerts card).
   - A `web-push` encryption and VAPID check with a real key pair.
 
-Not verified: a real push reaching a phone. That needs the deployed app with VAPID keys
-(Android Chrome, or an installed iOS PWA). Phase 5's done-criterion is checked on Greg's
-phone after the Vercel deploy.
+Verified on 2026-10-10: on the live Vercel app (VAPID keys + Upstash set), Greg turned on
+alerts on his phone, ran a demo crash, and the "sold" push arrived. Phase 5's done-criterion
+is met.
 
 ## Phase 6 (2026-10-10): polish and submission
 
@@ -241,12 +241,7 @@ mainnet deploy and fill, and the Team section.
 1. **Mainnet deploy:** Greg's go-ahead plus about 1.5 mainnet MON on the deployer. Ideally use
    a separate mainnet-only key; tiny real funds only.
 2. ~~**Deploy the app (Phase 4)**~~ Done 2026-10-10: https://floor-delta-ruby.vercel.app
-   (Privy login verified). Still open from this item: push (VAPID + Upstash). Original note: a Privy App ID (dashboard.privy.io, email login, add the
-   Vercel domain), then a Vercel project with root `app` and the env vars in `docs/app.md`.
-   The keeper key exists (15 MON). No paid keeper host is needed (D-011). For push: run
-   `pnpm --filter @floor/app vapid` once, add the two keys and `VAPID_SUBJECT`, and connect
-   Vercel Storage → Upstash Redis (free). Then turn on alerts on your phone and run a demo
-   crash.
+   with Privy login, and push alerts (VAPID + Upstash) verified on Greg's phone.
 3. Exact submission time and team, for PROGRESS.md and the schedule.
 4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.

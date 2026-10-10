@@ -16,21 +16,21 @@ Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg �
 
 ## Phase 6 polish
 
-| Item                                     | State | Notes                                                                                                                                     |
-| ---------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Empty, loading and error states          | ✅    | Skeletons while loading; empty states on Home and Activity; a "can't reach Monad" note when reads fail; contract errors in plain English. |
-| Accessibility                            | ✅    | axe (WCAG 2.1 A/AA) passes on every screen in Playwright; `<main>` landmark; labelled controls.                                           |
-| Lighthouse (mobile)                      | ✅    | 91 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on a local production build.                                       |
-| Installable PWA                          | ✅    | Manifest, PNG icons, service worker (tested in Playwright).                                                                               |
-| Push on Android Chrome and installed iOS | ⏳    | Built and unit-tested; needs VAPID keys + Upstash on Vercel, then one real crash on Greg's phone.                                         |
+| Item                            | State | Notes                                                                                                                                     |
+| ------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Empty, loading and error states | ✅    | Skeletons while loading; empty states on Home and Activity; a "can't reach Monad" note when reads fail; contract errors in plain English. |
+| Accessibility                   | ✅    | axe (WCAG 2.1 A/AA) passes on every screen in Playwright; `<main>` landmark; labelled controls.                                           |
+| Lighthouse (mobile)             | ✅    | 91 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on a local production build.                                       |
+| Installable PWA                 | ✅    | Manifest, PNG icons, service worker (tested in Playwright).                                                                               |
+| Push on a real phone            | ✅    | Verified by Greg on 2026-10-10 on the live app: alerts turned on, a demo crash sold, and the push arrived.                                |
 
 ## Before you submit (Greg)
 
 1. ~~Create the Privy app (email login) and add the Vercel domain to allowed origins.~~ Done.
-2. ~~Deploy to Vercel with the env vars in `docs/app.md`.~~ Done. Generate VAPID keys
-   (`pnpm --filter @floor/app vapid`) and connect Upstash Redis.
-3. On your phone: open the URL, Add to Home Screen, sign in, turn on alerts, run one
-   protect → crash → sold. Confirm the push arrives.
+2. ~~Deploy to Vercel with the env vars in `docs/app.md`; add VAPID keys and Upstash Redis.~~
+   Done.
+3. ~~On your phone: install, sign in, turn on alerts, protect → crash → sold, push arrives.~~
+   Done.
 4. Optional: mainnet deploy and one tiny real fill through 0x (`docs/deploy.md`,
    `docs/keeper.md`).
 5. Record the demo with `docs/demo-script.md`; upload it.
