@@ -12,19 +12,13 @@ export interface TxRequest {
   value?: bigint;
 }
 
-/** How to sign in: email (an embedded wallet) or the user's own wallet (MetaMask and others). */
-export type LoginMethod = 'email' | 'wallet';
-
 /** What the app needs from a wallet. Privy in production; a local key only on anvil e2e runs. */
 export interface FloorWallet {
   ready: boolean;
   authenticated: boolean;
   address?: Address;
   email?: string;
-  /** Set when signed in with the user's own wallet, e.g. "MetaMask". */
-  walletName?: string;
-  /** Opens sign-in. No method: offer both email and wallet. */
-  login: (method?: LoginMethod) => void;
+  login: () => void;
   logout: () => Promise<void>;
   send: (tx: TxRequest) => Promise<Hex>;
   /** personal_sign, e.g. to prove wallet ownership when turning on push alerts. */

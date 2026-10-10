@@ -71,7 +71,7 @@ export default function ProtectPage({ params }: { params: Promise<{ symbol: stri
   if (!authenticated) {
     return (
       <Screen title={`Protect ${token.symbol}`} back="/">
-        <Button onClick={() => login()}>Sign in to continue</Button>
+        <Button onClick={login}>Sign in to continue</Button>
       </Screen>
     );
   }
