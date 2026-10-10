@@ -11,6 +11,8 @@ contracts/out/
 contracts/cache/
 contracts/broadcast/*/31337/
 contracts/broadcast/**/dry-run/
+# local + mainnet-fork rehearsals (script/local-demo.sh, script/fork-live.sh)
+contracts/broadcast-rehearsal/
 
 # secrets: only .env.example files are committed
 .env

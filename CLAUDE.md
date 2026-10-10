@@ -43,7 +43,11 @@ pnpm test                  # vitest in every TS package
 pnpm typecheck
 pnpm lint                  # prettier --check + forge fmt --check
 pnpm format
+pnpm contracts:rehearse:local   # anvil (Monad mode): DeployDemo + Smoke with a fill
+pnpm contracts:rehearse:fork    # Monad mainnet fork: DeployLive + Smoke
 ```
+
+Deploying for real: `docs/deploy.md`. Mainnet deploys need Greg's go-ahead.
 
 ## Layout
 

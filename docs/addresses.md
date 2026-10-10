@@ -81,6 +81,9 @@ Monad mainnet, so prices land onchain without us posting them:
 | WETH/USD  | `0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6` ✅ | standard: 1h / 0.05%              |
 | WBTC/USD  | `0xc9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33` ✅ | standard: 1h / 0.05%              |
 
+Checked onchain on 2026-10-10 (mainnet-fork rehearsal, `docs/deploy.md`): all four MVP feeds
+were 21 s old with confidence under 0.1%, which confirms the push-only age setting in D-004.
+
 The full canonical list: [Pyth push feeds (EVM), Monad section](https://docs.pyth.network/price-feeds/core/push-feeds/evm).
 Floor prices WETH with ETH/USD (the tighter premium tier). That feed tracks ETH, so a WETH depeg
 would not show up in it, which is acceptable for a wrapped-asset MVP and is noted in the README.

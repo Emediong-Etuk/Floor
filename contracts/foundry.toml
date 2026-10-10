@@ -12,6 +12,8 @@ solc_version = "0.8.30"
 evm_version = "prague"
 optimizer = true
 optimizer_runs = 200
+# Scripts write/read deployment JSON (deployments/<chainId>.json) for the keeper and app.
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
 # Enables Monad execution semantics (gas, precompiles, reserve balance) in forge/anvil/cast.
 network = "monad"
 remappings = [

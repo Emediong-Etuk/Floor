@@ -9,7 +9,7 @@ Hackathon deadline: **TODO: Greg to fill in** · Team: **TODO** · Repo: github.
 | ------------------------ | ---------------------------------------------- |
 | 0: Recon and setup       | ✅ Done (2026-10-10)                           |
 | 1: Contracts             | ✅ Done (2026-10-10), waiting on Greg's review |
-| 2: Deploy                | ⏳ Next (needs a funded testnet deployer key)  |
+| 2: Deploy                | 🔨 Scripts done + rehearsed; needs keys + MON  |
 | 3: Keeper                | —                                              |
 | 4: Frontend MVP          | — (D-005 open)                                 |
 | 5: Notifications         | —                                              |
@@ -75,11 +75,40 @@ pnpm install && pnpm contracts:test
 cd contracts && forge coverage --report summary --no-match-coverage "(test|script)"
 ```
 
+## Phase 2 (2026-10-10): deploy scripts, part 1
+
+Plan: shared mainnet config → DeployDemo / DeployLive → Smoke (create → cancel, plus a demo
+fill) → rehearse on local anvil and on a mainnet fork → tests for CI → runbook.
+
+Done:
+
+- `script/DeployDemo.s.sol`, `script/DeployLive.s.sol` and `script/Smoke.s.sol`. Each deploy
+  writes `deployments/<chainId>.json` for the keeper and app.
+- `script/config/MonadMainnet.sol` holds the mainnet addresses and feed ids. A vitest test
+  fails if it drifts from `@floor/shared`.
+- Rehearsals, all passing:
+  - `local-demo.sh`: deploy, then create/cancel, then a real fill (1,000 WMON crashed to
+    $0.02 sold for 19.96 USDC).
+  - `fork-live.sh`: deploy on a Monad mainnet fork, with real Pyth prices for all four feeds
+    (21 s old, confidence under 0.1%), then create/cancel with real WMON.
+- `test/Deploy.t.sol`:
+  - the deploy wiring and a judge journey, which run in CI;
+  - two mainnet-fork tests (real prices, $500 cap), which run when `MONAD_MAINNET_RPC_URL` is
+    set and passed locally.
+- Rehearsal transaction logs go to a git-ignored `broadcast-rehearsal/`, so a fork run can
+  never look like a real mainnet deploy.
+- Runbook: `docs/deploy.md`, covering gas and MON needed, verification and ownership handover.
+
+Left for Phase 2: the real testnet deploy and verification, the testnet smoke run, the mainnet
+deploy (after Greg confirms) and the mainnet smoke run, then record the addresses.
+
 ## Blockers / needs Greg
 
-1. **Phase 2 testnet deploy:** a deployer key funded with testnet MON (faucet.monad.xyz needs a
-   human). Add it as the environment secret `FLOOR_DEPLOYER_PRIVATE_KEY`, or deploy locally
-   with the script once it's written. The keeper key is separate and needs more than 10 MON.
+1. **Phase 2 testnet deploy:** a fresh deployer key with about 3 testnet MON (faucet.monad.xyz
+   needs a human). Either add it as the environment secret `DEPLOYER_PRIVATE_KEY` so Claude
+   can deploy, or run `pnpm contracts:deploy:demo` yourself (`docs/deploy.md`). The keeper key
+   is separate and needs more than 10 MON. The mainnet deploy needs about 1.5 MON and your
+   go-ahead.
 2. Hackathon deadline and team, for PROGRESS.md and the schedule.
 3. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.
