@@ -80,6 +80,10 @@ export class Keeper {
   private readonly unfillableUntil = new Map<bigint, number>();
   private readonly expiring = new Set<bigint>();
   private ticking = false;
+  /** Fills and expiries started by tick(); `settled()` awaits them (used by one-shot sweeps). */
+  private readonly running = new Set<Promise<void>>();
+  /** Triggered candidates seen in the last tick. */
+  lastTriggered = 0;
   private readonly now: () => number;
 
   constructor(
@@ -154,6 +158,7 @@ export class Keeper {
         (o) => !this.inFlight.has(o.id) && !this.pending.has(o.id),
       );
       const ev = evaluate(idle, prices, this.params, timestamp);
+      this.lastTriggered = ev.triggered.length;
 
       for (const id of ev.untriggered) {
         this.detectedAt.delete(id);
@@ -163,13 +168,13 @@ export class Keeper {
       for (const c of ev.triggered) {
         if ((this.unfillableUntil.get(c.order.id) ?? 0) > this.now()) continue;
         if (!this.detectedAt.has(c.order.id)) this.detectedAt.set(c.order.id, this.now());
-        void this.fill(c);
+        this.track(this.fill(c));
       }
       // Expiries are housekeeping: a few per block, never ahead of fills.
       if (this.inFlight.size === 0) {
         const max = this.opts.maxExpiresPerTick ?? 3;
         for (const o of ev.expired.filter((x) => !this.expiring.has(x.id)).slice(0, max)) {
-          void this.expire(o);
+          this.track(this.expire(o));
         }
       }
     } catch (err) {
@@ -177,6 +182,16 @@ export class Keeper {
     } finally {
       this.ticking = false;
     }
+  }
+
+  private track(p: Promise<void>): void {
+    this.running.add(p);
+    void p.finally(() => this.running.delete(p));
+  }
+
+  /** Resolves when every fill/expiry started so far has finished. */
+  async settled(): Promise<void> {
+    while (this.running.size > 0) await Promise.allSettled([...this.running]);
   }
 
   // ------------------------------------------------------------------ fills

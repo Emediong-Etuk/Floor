@@ -11,7 +11,7 @@ Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exac
 | 1: Contracts             | ✅ Done (2026-10-10), waiting on Greg's review  |
 | 2: Deploy                | 🔨 Testnet ✅ (verified + smoke); mainnet waits |
 | 3: Keeper                | 🔨 Testnet ✅ (fills in ~0.5 s); mainnet waits  |
-| 4: Frontend MVP          | — (D-005 open)                                  |
+| 4: Frontend MVP          | ✅ Built + e2e green; needs Privy id + Vercel   |
 | 5: Notifications         | —                                               |
 | 6: Polish and submission | —                                               |
 
@@ -147,13 +147,42 @@ no keeper key exists yet. It cost about 0.1 MON.
 Left for Phase 3: the mainnet acceptance test (a tiny real fill through 0x). That needs the
 mainnet deploy, a 0x API key and a funded mainnet keeper. Also: host the keeper always-on.
 
+## Phase 4 (2026-10-10): app
+
+Plan: fresh Next 16 app (D-005) → wallet abstraction (Privy; a local key on anvil only) →
+read hooks → screens per §4 → server routes (faucet, demo price and gap, on-demand keeper
+sweep, D-011) → Playwright e2e on anvil → CI.
+
+Done:
+
+- `app/`: Next 16.3.8, React 19, Tailwind 4, Privy 3.48 (email login, embedded wallet,
+  Floor's own step UI with no Privy modals), TanStack Query, viem.
+- Screens: welcome, home, protect (sliders, cash-out, advanced, plain-English summary,
+  exact approval), protection detail (edit and cancel), activity (receipts with the tx found
+  from the event), settings and `/demo`.
+- Server routes: `/api/faucet`, `/api/demo/price`, `/api/demo/gap`, `/api/keeper/sweep` and
+  `/api/keeper/status`. The on-demand sweep reuses the keeper code (`@floor/keeper/sweep`).
+- E2E (`pnpm app:e2e`): Playwright at Pixel 7 size against a production build on anvil.
+  - Flow tested: sign in → faucet → protect 1,000 WMON with a bracket → crash −20% → the
+    keeper sells → Activity shows 19.94 USDC with the tx link.
+  - Also tested: edit then cancel, and validation. 3/3 pass.
+- Checked against the real testnet deployment: `/api/keeper/status`, `/api/demo/gap`,
+  `/api/demo/price` (a 0% move) and `/api/keeper/sweep` all work with the server keys.
+- CI: the app build runs in the TS job, and a new `app-e2e` job runs anvil + Playwright.
+- Runbook and Vercel steps: `docs/app.md`.
+
+Not done: native MON → WMON wrapping (live mode only; demo tokens are already ERC-20s), a
+holdings API (Zerion; demo tokens aren't indexed, so balances come from on-chain reads), 24h
+price change (the mock oracle has no history), and the PWA service worker (Phase 5, with
+push).
+
 ## Blockers / needs Greg
 
 1. **Mainnet deploy:** Greg's go-ahead plus about 1.5 mainnet MON on the deployer. Ideally use
    a separate mainnet-only key; tiny real funds only.
-2. **Keeper key + host (Phase 3):** a separate key with more than 10 testnet MON (Monad reserve
-   balance), as `KEEPER_PRIVATE_KEY`, and an always-on host (Railway, Render or Fly.io;
-   `docs/keeper.md`). For live mode: a 0x API key and a mainnet keeper key.
+2. **Deploy the app (Phase 4):** a Privy App ID (dashboard.privy.io, email login, add the
+   Vercel domain), then a Vercel project with root `app` and the env vars in `docs/app.md`.
+   The keeper key exists (15 MON). No paid keeper host is needed (D-011).
 3. Exact submission time and team, for PROGRESS.md and the schedule.
 4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.
@@ -164,5 +193,6 @@ mainnet deploy, a 0x API key and a funded mainnet keeper. Also: host the keeper 
 ## Decisions
 
 See `docs/DECISIONS.md`: D-001 toolchain · D-002 tokens · D-003 0x AllowanceHolder ·
-D-004 price source (C) · D-005 frontend base (open) · D-006 chain defs · D-007 branching ·
-D-008 Pyth SDK via npm · D-009 Phase 1 contract details · D-010 keeper design.
+D-004 price source (C) · D-005 frontend base (fresh Next 16) · D-006 chain defs · D-007 branching ·
+D-008 Pyth SDK via npm · D-009 Phase 1 contract details · D-010 keeper design ·
+D-011 on-demand keeper (free hosting).

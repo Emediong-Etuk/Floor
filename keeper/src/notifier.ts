@@ -31,6 +31,8 @@ export type NotifyEvent =
 
 export class Notifier {
   private readonly sent = new Set<string>();
+  /** Local listeners (e.g. a one-shot sweep collecting what happened). */
+  readonly listeners: ((event: NotifyEvent) => void)[] = [];
 
   constructor(
     private readonly url: string | undefined,
@@ -53,6 +55,7 @@ export class Notifier {
 
   send(event: NotifyEvent): void {
     this.log.info({ notify: event }, 'notify');
+    for (const l of this.listeners) l(event);
     if (!this.url || !this.secret) return;
     this.fetchFn(this.url, {
       method: 'POST',

@@ -90,7 +90,7 @@ max age) and §7 (Hermes becomes optional).
   refunds the rest of `msg.value` to the executor. (Pyth keeps overpayments, so we never send
   more than the fee.)
 
-## D-005 Frontend base (2026-10-10, **open: decide before Phase 4**)
+## D-005 Frontend base (2026-10-10, **decided: fresh Next 16 app**)
 
 The recommended Monad template
 ([`monad-developers/next-serwist-privy-0x`](https://github.com/monad-developers/next-serwist-privy-0x))
@@ -161,3 +161,20 @@ home is the very large `pyth-crosschain` monorepo, so a submodule would be slow.
   mempool, and a stuck nonce is rare at 400 ms blocks.
 - **Overlapping ticks** are skipped, not queued. Fills run concurrently, but only one per
   order at a time.
+
+## D-011 On-demand keeper in the app (2026-10-10, decided: Greg)
+
+Greg has no budget for paid always-on hosting. On testnet, prices only move when the `/demo`
+panel moves them (MockOracle). So the app's serverless routes run one keeper sweep right
+after each price move, and after each new protection, using the same `Keeper` code as the
+always-on process (`@floor/keeper/sweep`). The fill is just as real on-chain, and it usually
+lands within about a second of the price move.
+
+- Keys live in Vercel server env vars (`DEMO_OPERATOR_PRIVATE_KEY`, `KEEPER_PRIVATE_KEY`).
+  These are testnet only and never `NEXT_PUBLIC_*`.
+- Limitation, stated in the README: this doesn't watch real market prices around the clock.
+  Live mode on mainnet needs the always-on keeper (`pnpm keeper:start`), for example on
+  Greg's laptop during a recorded live demo.
+- Concurrent sweeps on one instance share the pass in progress. Across instances, two
+  sweeps can race. That's safe, because the contract only lets an order fill once (the loser
+  gets `NotActive`).

@@ -22,3 +22,9 @@ contracts/broadcast-rehearsal/
 # misc
 .DS_Store
 *.log
+
+# app
+app/test-results/
+app/playwright-report/
+app/next-env.d.ts
+app/e2e/screenshots/

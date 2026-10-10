@@ -48,6 +48,8 @@ pnpm contracts:rehearse:fork    # Monad mainnet fork: DeployLive + Smoke
 pnpm --filter @floor/shared abi:sync   # after changing contracts (forge build first)
 pnpm keeper:start               # keeper (keeper/.env; docs/keeper.md)
 pnpm e2e:testnet                # testnet: mint → protect → crash → keeper fills
+pnpm app:dev                    # app (app/.env.local; docs/app.md)
+pnpm app:e2e                    # Playwright on anvil (production build)
 ```
 
 Deploying for real: `docs/deploy.md`. Mainnet deploys need Greg's go-ahead.
@@ -56,7 +58,7 @@ Deploying for real: `docs/deploy.md`. Mainnet deploys need Greg's go-ahead.
 
 - `contracts/`: Foundry project (build prompt §6)
 - `keeper/`: Node/TS keeper (§7)
-- `app/`: Next.js PWA (§8, Phase 4, see D-005)
+- `app/`: Next.js 16 PWA (§8; docs/app.md). Next 16 differs from older versions: read `app/node_modules/next/dist/docs/` before changing framework-level code
 - `packages/shared/`: chains, token registry, third-party addresses; later ABIs and trigger/minOut math
 - `docs/`: addresses, architecture, decisions, perks, pitch outline
 

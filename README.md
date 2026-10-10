@@ -13,7 +13,9 @@ cash-out price to lock in profit, and whichever price is hit first wins.
   verified on Monad testnet (`docs/addresses.md`).
 - **Keeper:** done. On Monad testnet it filled a protected order **474 ms after the price
   crashed** (`docs/keeper.md`).
-- **App:** next. See [`PROGRESS.md`](PROGRESS.md) for live status.
+- **App:** done: a phone-first PWA with email login, protect, edit and cancel, activity and a
+  `/demo` panel. Playwright e2e is green (`docs/app.md`). Next: deploy to Vercel, then push
+  notifications. See [`PROGRESS.md`](PROGRESS.md).
 
 ## How it works
 
@@ -78,7 +80,9 @@ Each package has an `.env.example`. Copy it to `.env` (git-ignored) and fill it 
 - Liquidity risk: in a very fast crash the sale happens at the market price at that moment,
   which can be slightly below your floor. If no venue can fill within your limit, the order
   waits.
-- Keeper liveness: if no one executes, protections don't fire.
+- Keeper liveness: if no one executes, protections don't fire. The hosted demo runs the keeper
+  on demand (after each `/demo` price move or new protection, D-011). An always-on keeper is
+  `pnpm keeper:start`.
 
 ## License
 

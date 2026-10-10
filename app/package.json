@@ -1,0 +1,31 @@
+{
+  "name": "@floor/app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "e2e": "node e2e/run.mjs",
+    "sync-deployments": "node scripts/sync-deployments.mjs"
+  },
+  "dependencies": {
+    "@floor/keeper": "workspace:*",
+    "@floor/shared": "workspace:*",
+    "@privy-io/react-auth": "3.48.1",
+    "@tanstack/react-query": "5.104.1",
+    "next": "16.3.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "viem": "2.57.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3"
+  }
+}

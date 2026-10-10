@@ -18,13 +18,15 @@
     "contracts:rehearse:local": "contracts/script/local-demo.sh",
     "contracts:rehearse:fork": "contracts/script/fork-live.sh",
     "keeper:dev": "pnpm --filter @floor/keeper dev",
-    "app:dev": "echo 'Phase 4: app from the Monad 0x + Privy template' && exit 1",
+    "app:dev": "pnpm --filter @floor/app dev",
     "e2e:testnet": "pnpm --filter @floor/keeper e2e:testnet",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "lint": "prettier --check . && pnpm contracts:fmt",
     "format": "prettier --write . && cd contracts && forge fmt",
-    "keeper:start": "pnpm --filter @floor/keeper start"
+    "keeper:start": "pnpm --filter @floor/keeper start",
+    "app:build": "pnpm --filter @floor/app build",
+    "app:e2e": "pnpm --filter @floor/app e2e"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
