@@ -11,7 +11,7 @@ Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exac
 | 1: Contracts             | ✅ Done (2026-10-10), waiting on Greg's review  |
 | 2: Deploy                | 🔨 Testnet ✅ (verified + smoke); mainnet waits |
 | 3: Keeper                | 🔨 Testnet ✅ (fills in ~0.5 s); mainnet waits  |
-| 4: Frontend MVP          | ✅ Built + e2e green; needs Privy id + Vercel   |
+| 4: Frontend MVP          | ✅ Live on Vercel (testnet)                     |
 | 5: Notifications         | ✅ Built + tested; needs VAPID keys + Upstash   |
 | 6: Polish and submission | ✅ Done; video + live URL wait on Greg          |
 
@@ -240,7 +240,8 @@ mainnet deploy and fill, and the Team section.
 
 1. **Mainnet deploy:** Greg's go-ahead plus about 1.5 mainnet MON on the deployer. Ideally use
    a separate mainnet-only key; tiny real funds only.
-2. **Deploy the app (Phase 4):** a Privy App ID (dashboard.privy.io, email login, add the
+2. ~~**Deploy the app (Phase 4)**~~ Done 2026-10-10: https://floor-delta-ruby.vercel.app
+   (Privy login verified). Still open from this item: push (VAPID + Upstash). Original note: a Privy App ID (dashboard.privy.io, email login, add the
    Vercel domain), then a Vercel project with root `app` and the env vars in `docs/app.md`.
    The keeper key exists (15 MON). No paid keeper host is needed (D-011). For push: run
    `pnpm --filter @floor/app vapid` once, add the two keys and `VAPID_SUBJECT`, and connect

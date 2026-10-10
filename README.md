@@ -4,6 +4,10 @@
 price falls to it, Floor sells to USDC automatically, even while you sleep. You can also set a
 cash-out price to lock in profit, and whichever price is hit first wins.
 
+**▶ Try it: [floor-delta-ruby.vercel.app](https://floor-delta-ruby.vercel.app)** (Monad testnet, demo
+mode). Sign in with email, tap **Demo → Mint test tokens**, protect some WMON, then crash the
+price on **Demo** and watch the keeper sell. Best on a phone: Share → Add to Home Screen.
+
 > ⚠️ **Hackathon software. Not audited.** Built for the Monad Metropolis Hackathon (Onchain
 > Finance & Trading). Testnet demo; use tiny amounts only.
 
