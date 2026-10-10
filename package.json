@@ -1,0 +1,30 @@
+{
+  "name": "floor",
+  "private": true,
+  "description": "Floor: automatic stop-loss and take-profit for everyday crypto holders on Monad",
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "contracts:build": "cd contracts && forge build",
+    "contracts:test": "cd contracts && forge test",
+    "contracts:fmt": "cd contracts && forge fmt --check",
+    "contracts:deploy:demo": "echo 'Phase 2: DeployDemo.s.sol' && exit 1",
+    "contracts:deploy:live": "echo 'Phase 2: DeployLive.s.sol' && exit 1",
+    "keeper:dev": "pnpm --filter @floor/keeper dev",
+    "app:dev": "echo 'Phase 4: app from the Monad 0x + Privy template' && exit 1",
+    "e2e:testnet": "echo 'Phase 3: testnet end-to-end script' && exit 1",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "prettier --check . && pnpm contracts:fmt",
+    "format": "prettier --write . && cd contracts && forge fmt"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "prettier": "3.9.10",
+    "typescript": "5.9.3",
+    "vitest": "5.0.3"
+  }
+}

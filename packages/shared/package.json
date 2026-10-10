@@ -1,0 +1,17 @@
+{
+  "name": "@floor/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chains, token registry, ABIs and trigger/minOut math shared by the keeper and the app",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "viem": "2.57.4"
+  }
+}

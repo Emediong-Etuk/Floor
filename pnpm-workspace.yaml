@@ -1,0 +1,7 @@
+packages:
+  - app
+  - keeper
+  - packages/*
+
+onlyBuiltDependencies:
+  - esbuild

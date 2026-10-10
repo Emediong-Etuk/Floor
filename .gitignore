@@ -1,0 +1,22 @@
+# deps / builds
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts/broadcast/**/dry-run/
+
+# secrets: only .env.example files are committed
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+*.log
