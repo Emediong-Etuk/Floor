@@ -2,6 +2,18 @@
 
 Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg · ➖ optional.
 
+**Deadline: Tue 2026-10-13, 7:59 AM WAT** (Mon 11:59 PM PT, 06:59 UTC). Plan to submit by
+**Mon 2026-10-12, 10:00 PM WAT**, with a code and docs freeze at **6:00 PM WAT**, so nothing
+depends on being awake at 7 AM.
+
+| When (WAT)        | What                                                                      |
+| ----------------- | ------------------------------------------------------------------------- |
+| Sun 11 Oct, noon  | Decide on mainnet (go / no-go). Send the team line.                       |
+| Sun 11 Oct, night | If go: mainnet deploy + one tiny real fill. Dry-run the demo script.      |
+| Mon 12 Oct, 2 PM  | Demo video recorded and uploaded.                                         |
+| Mon 12 Oct, 6 PM  | Freeze: video link and final numbers in README; last PR merged; CI green. |
+| Mon 12 Oct, 10 PM | Submit. Reset the demo price; top up the deployer for judges.             |
+
 ## Required
 
 | Item                                                                                                     | State | Notes                                                                                                                                                                 |

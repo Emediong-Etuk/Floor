@@ -1,7 +1,7 @@
 # PROGRESS
 
 Living checklist. Update after every meaningful step.
-Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exact time TBC)** · Team: **TODO** · Repo: github.com/Emediong-Etuk/floor
+Hackathon deadline: **Tue 2026-10-13, 7:59 AM WAT (06:59 UTC)** · Freeze: **Mon 2026-10-12, 6:00 PM WAT** · Team: **TODO** · Repo: github.com/Emediong-Etuk/floor
 
 ## Phase status
 
@@ -242,7 +242,7 @@ mainnet deploy and fill, and the Team section.
    a separate mainnet-only key; tiny real funds only.
 2. ~~**Deploy the app (Phase 4)**~~ Done 2026-10-10: https://floor-delta-ruby.vercel.app
    with Privy login, and push alerts (VAPID + Upstash) verified on Greg's phone.
-3. Exact submission time and team, for PROGRESS.md and the schedule.
+3. Team line and links, for the pitch outline.
 4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.
 5. Claim the QuickNode perk and make a 0x dashboard account before the mainnet deploy (`docs/perks.md`).
