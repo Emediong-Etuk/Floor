@@ -1,7 +1,7 @@
 # PROGRESS
 
 Living checklist. Update after every meaningful step.
-Hackathon deadline: **TODO: Greg to fill in** · Team: **TODO** · Repo: github.com/Emediong-Etuk/floor
+Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exact time TBC)** · Team: **TODO** · Repo: github.com/Emediong-Etuk/floor
 
 ## Phase status
 
@@ -154,7 +154,7 @@ mainnet deploy, a 0x API key and a funded mainnet keeper. Also: host the keeper 
 2. **Keeper key + host (Phase 3):** a separate key with more than 10 testnet MON (Monad reserve
    balance), as `KEEPER_PRIVATE_KEY`, and an always-on host (Railway, Render or Fly.io;
    `docs/keeper.md`). For live mode: a 0x API key and a mainnet keeper key.
-3. Hackathon deadline and team, for PROGRESS.md and the schedule.
+3. Exact submission time and team, for PROGRESS.md and the schedule.
 4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.
 5. Claim the QuickNode perk and make a 0x dashboard account before the mainnet deploy (`docs/perks.md`).
