@@ -1,23 +1,10 @@
 'use client';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
-import {
-  PrivyProvider,
-  usePrivy,
-  useSendTransaction,
-  useSignMessage,
-  useWallets,
-} from '@privy-io/react-auth';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createWalletClient, http, type Address, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { CHAIN_ID, RPC_URL, chain } from './config';
+
+type PrivyWalletComponent = typeof import('./privy-wallet').default;
 
 export interface TxRequest {
   to: Address;
@@ -38,64 +25,12 @@ export interface FloorWallet {
   signMessage: (message: string) => Promise<Hex>;
 }
 
-const WalletContext = createContext<FloorWallet | null>(null);
+export const WalletContext = createContext<FloorWallet | null>(null);
 
 export function useFloorWallet(): FloorWallet {
   const w = useContext(WalletContext);
   if (!w) throw new Error('useFloorWallet outside WalletProvider');
   return w;
-}
-
-// ------------------------------------------------------------------ Privy (production)
-
-function PrivyBridge({ children }: { children: ReactNode }) {
-  const { ready, authenticated, user, login, logout } = usePrivy();
-  const { wallets } = useWallets();
-  const { sendTransaction } = useSendTransaction();
-  const { signMessage: privySign } = useSignMessage();
-  // The embedded wallet Privy creates at first login (email → wallet, no seed phrase).
-  const embedded = wallets.find((w) => w.walletClientType === 'privy');
-  const address = (embedded?.address ?? user?.wallet?.address) as Address | undefined;
-
-  const send = useCallback(
-    async (tx: TxRequest) => {
-      if (!address) throw new Error('Wallet not ready yet');
-      const { hash } = await sendTransaction(
-        { to: tx.to, data: tx.data, value: tx.value ?? 0n, chainId: CHAIN_ID },
-        // The app shows its own step-by-step progress, so skip Privy's confirmation modal.
-        { uiOptions: { showWalletUIs: false }, address },
-      );
-      return hash as Hex;
-    },
-    [address, sendTransaction],
-  );
-
-  const signMessage = useCallback(
-    async (message: string) => {
-      if (!address) throw new Error('Wallet not ready yet');
-      const { signature } = await privySign(
-        { message },
-        { uiOptions: { showWalletUIs: false }, address },
-      );
-      return signature as Hex;
-    },
-    [address, privySign],
-  );
-
-  const value = useMemo<FloorWallet>(
-    () => ({
-      ready,
-      authenticated: authenticated && !!address,
-      address,
-      email: user?.email?.address,
-      login,
-      logout,
-      send,
-      signMessage,
-    }),
-    [ready, authenticated, address, user, login, logout, send, signMessage],
-  );
-  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
 }
 
 // ------------------------------------------------------------------ local key (anvil e2e only)
@@ -152,11 +87,21 @@ const LOADING: FloorWallet = {
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return <WalletContext.Provider value={LOADING}>{children}</WalletContext.Provider>;
-  // A raw key in the browser is only ever acceptable on a throwaway local chain.
-  if (E2E_KEY && CHAIN_ID === 31_337) return <LocalKeyWallet>{children}</LocalKeyWallet>;
+  const useLocalKey = Boolean(E2E_KEY) && CHAIN_ID === 31_337;
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+  // Privy is the biggest bundle in the app: load it as its own chunk after first paint. Until
+  // it arrives, the app renders normally with a "loading" wallet (never a blank screen).
+  const [Privy, setPrivy] = useState<PrivyWalletComponent>();
+  useEffect(() => {
+    setMounted(true);
+    if (useLocalKey || !appId) return;
+    void import('./privy-wallet').then((m) => setPrivy(() => m.default));
+  }, [useLocalKey, appId]);
+
+  const loading = <WalletContext.Provider value={LOADING}>{children}</WalletContext.Provider>;
+  if (!mounted) return loading;
+  // A raw key in the browser is only ever acceptable on a throwaway local chain.
+  if (useLocalKey) return <LocalKeyWallet>{children}</LocalKeyWallet>;
   if (!appId) {
     return (
       <div className="mx-auto max-w-md p-6 text-sm text-[var(--muted)]">
@@ -164,18 +109,5 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  return (
-    <PrivyProvider
-      appId={appId}
-      config={{
-        loginMethods: ['email'],
-        appearance: { theme: 'dark', accentColor: '#34d399', landingHeader: 'Sign in to Floor' },
-        embeddedWallets: { ethereum: { createOnLogin: 'users-without-wallets' } },
-        defaultChain: chain,
-        supportedChains: [chain],
-      }}
-    >
-      <PrivyBridge>{children}</PrivyBridge>
-    </PrivyProvider>
-  );
+  return Privy ? <Privy appId={appId}>{children}</Privy> : loading;
 }

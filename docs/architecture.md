@@ -2,20 +2,22 @@
 
 ```mermaid
 flowchart TB
-    subgraph Client["Floor PWA (Next.js, phone first)"]
-        UI["Protect flow · Home · Activity · /demo"]
+    subgraph Phone["Floor PWA (Next.js 16, phone first)"]
+        UI["Home · Protect · Protection · Activity · Settings · /demo"]
         Privy["Privy embedded wallet<br/>(email login, no seed phrase)"]
+        SW["Service worker<br/>(web push, installable)"]
     end
 
-    subgraph Server["App routes (server side)"]
-        Notify["/api/notify (keeper → web push)"]
-        Holdings["/api/holdings (Zerion, key stays server side)"]
-        Health["/api/keeper (proxies keeper /health)"]
+    subgraph Vercel["App server routes (Vercel free tier, keys stay server side)"]
+        Sweep["On-demand keeper (D-011)<br/>/api/keeper/sweep · /api/demo/price<br/>same Keeper code as the process below"]
+        Demo["/api/faucet · /api/demo/gap · /api/keeper/status"]
+        Push["/api/push/subscribe (wallet-signed)<br/>/api/notify (Bearer secret)"]
+        Store[("Upstash Redis<br/>push subscriptions")]
     end
 
-    subgraph Keeper["Keeper (Node + viem, always-on host)"]
-        Track["Track active orders<br/>(views + WS events + 30s resync)"]
-        Eval["Evaluate triggers each block<br/>(same math as the contract, @floor/shared)"]
+    subgraph Keeper["Optional always-on keeper (pnpm keeper:start)"]
+        Track["Track orders: events + 30 s resync"]
+        Eval["Evaluate each block<br/>(same math as the contract, @floor/shared)"]
         Exec["Pre-check → quote → simulate → send<br/>(gas = estimate × 1.15)"]
     end
 
@@ -26,24 +28,33 @@ flowchart TB
         Tokens["User's tokens stay in the wallet<br/>(exact allowance to FloorOrders)"]
     end
 
-    Pyth["Pyth: sponsored push feeds + optional Hermes pull (D-004)"]
+    Pyth["Pyth: sponsored push feeds<br/>+ optional Hermes pull (D-004)"]
     ZeroX["0x Swap API (chain 143)"]
 
-    UI -->|approve / createOrder / createBracket / cancel| Floor
-    UI -->|read views| Floor
-    UI --> Holdings
-    UI --> Health
+    UI -->|approve / createOrder / createBracket / update / cancel| Floor
+    UI -->|read views, balances, prices| Floor
+    UI -->|after a new protection| Sweep
+    UI --> Demo
+    UI --> Push
+    Push --> Store
+    Sweep -->|execute| Floor
+    Sweep -->|sold / selling / waiting| Push
     Track --> Floor
     Eval --> Oracle
     Exec -->|quote| ZeroX
     Exec -->|execute id, priceUpdate, swap| Floor
-    Exec -->|fill receipt + latency| Notify
+    Exec -->|events| Push
     Floor -->|update + getPriceE18| Oracle
     Oracle --- Pyth
     Floor -->|transferFrom owner, amountIn| Tokens
     Floor -->|call with data| Venue
-    Notify -->|web push| Client
+    Push -->|web push| SW
 ```
+
+**Who runs the keeper.** On testnet, prices only move when `/demo` moves them, so the app's
+server routes run one keeper sweep right after each price move and each new protection
+(D-011): no paid host needed. For live prices, run the same `Keeper` class always-on with
+`pnpm keeper:start` (`docs/keeper.md`); it posts its events to `/api/notify`.
 
 ## How a protection fills
 
@@ -66,8 +77,9 @@ flowchart TB
 
    It marks the order filled (and cancels the OCO sibling) **before** any external call.
 
-6. USDC goes to the owner, minus the executor fee. The keeper posts the receipt to
-   `/api/notify`, which sends a web push.
+6. USDC goes to the owner, minus the fees. The keeper's events become web pushes ("Floor hit:
+   sold 1,000 WMON · You got 19.94 USDC"), sent straight from the on-demand sweep or via
+   `/api/notify` from an always-on keeper.
 
 ## Trust model
 
@@ -78,6 +90,11 @@ flowchart TB
   malicious executor can make the user no worse off than that (D-003).
 - **Liveness:** anyone can call `execute`. Our keeper is a convenience. If it goes down,
   protections stop firing until someone executes them. The README states this limitation.
+- **Owner:** can pause (cancels still work), cap the fee at ≤ 0.5%, and change the token and
+  venue allowlists, oracle limits and **the oracle itself**. A malicious owner with a fake
+  oracle could trigger sales at bad prices, so users trust the owner key with the oracle and
+  venue list. Before mainnet caps go up: a multisig owner and a timelock on `setOracle` and
+  `setSwapTarget`.
 
 ## Deployment modes
 

@@ -35,6 +35,11 @@ body {
   color: var(--text);
 }
 
+/* Keep scrolled-to content clear of the fixed bottom nav. */
+html {
+  scroll-padding-bottom: 6rem;
+}
+
 body {
   -webkit-tap-highlight-color: transparent;
 }
@@ -46,4 +51,15 @@ input[type='range'] {
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Loading state on "/": new visitors see the welcome screen, returning visitors a skeleton. */
+.returning-show {
+  display: none;
+}
+html[data-returning] .returning-show {
+  display: block;
+}
+html[data-returning] .returning-hide {
+  display: none;
 }

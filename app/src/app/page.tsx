@@ -1,27 +1,52 @@
 'use client';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { GasBanner } from '@/components/gas';
 import { ProtectionCard } from '@/components/protection';
-import { Button, Card, Screen, Skeleton } from '@/components/ui';
+import { Button, Card, OfflineNote, Screen, Skeleton } from '@/components/ui';
 import { DEMO_MODE, TOKENS } from '@/lib/config';
 import { amount, short, usd, usdValue } from '@/lib/format';
 import { groupProtections, isActive, useBalances, useOrders, usePrices } from '@/lib/reads';
 import { useFloorWallet } from '@/lib/wallet';
 
+const SIGNED_IN = 'floor-signed-in';
+
 export default function Page() {
   const w = useFloorWallet();
+  // Remember whether this browser was signed in, so the next visit shows a skeleton (not a
+  // flash of the welcome screen) while the wallet SDK loads. See the inline script in layout.tsx.
+  useEffect(() => {
+    if (!w.ready) return;
+    try {
+      if (w.authenticated) localStorage.setItem(SIGNED_IN, '1');
+      else localStorage.removeItem(SIGNED_IN);
+    } catch {
+      /* storage unavailable */
+    }
+    if (!w.authenticated) delete document.documentElement.dataset.returning;
+  }, [w.ready, w.authenticated]);
+
   if (!w.ready) {
+    // Server-rendered welcome = fast first paint for new visitors; returning visitors see the
+    // skeleton instead (CSS on html[data-returning]).
     return (
-      <Screen>
-        <Skeleton className="mt-16 h-40" />
-      </Screen>
+      <>
+        <div className="returning-hide">
+          <Welcome />
+        </div>
+        <div className="returning-show">
+          <Screen>
+            <Skeleton className="mt-16 h-40" />
+          </Screen>
+        </div>
+      </>
     );
   }
   return w.authenticated ? <Home /> : <Welcome />;
 }
 
 function Welcome() {
-  const { login } = useFloorWallet();
+  const { login, ready } = useFloorWallet();
   return (
     <Screen>
       <div className="flex flex-1 flex-col justify-center gap-8 pt-10">
@@ -42,8 +67,8 @@ function Welcome() {
           ))}
         </ol>
         <div className="space-y-3">
-          <Button onClick={login} className="w-full">
-            Continue with email
+          <Button onClick={login} className="w-full" disabled={!ready}>
+            {ready ? 'Continue with email' : 'Loading…'}
           </Button>
           <p className="text-center text-sm text-muted">
             No seed phrase. You stay in control of your tokens.
@@ -86,11 +111,12 @@ function Home() {
         </p>
       </Card>
 
+      <OfflineNote show={balances.isError || prices.isError || orders.isError} />
       <GasBanner native={balances.data?.native} />
 
       <section className="mb-6 space-y-3" aria-label="Your tokens">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Your tokens</h2>
-        {balances.isLoading || prices.isLoading ? (
+        {!balances.data || !prices.data ? (
           <Skeleton />
         ) : (
           <Card className="divide-y divide-line p-0">
@@ -130,7 +156,7 @@ function Home() {
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
           Active protections
         </h2>
-        {orders.isLoading ? (
+        {!orders.data ? (
           <Skeleton className="h-32" />
         ) : active.length === 0 ? (
           <Card className="text-center text-sm text-muted">

@@ -116,6 +116,14 @@ await waitFor(
   throw e;
 });
 
+// `--serve`: keep anvil + the app running for manual testing (Ctrl+C to stop).
+if (process.argv.includes('--serve')) {
+  console.log(
+    `Floor on a local chain: http://127.0.0.1:${APP_PORT}  (anvil ${RPC}). Ctrl+C to stop.`,
+  );
+  await new Promise(() => {});
+}
+
 const pw = spawnSync('pnpm', ['exec', 'playwright', 'test', ...process.argv.slice(2)], {
   cwd: app,
   stdio: 'inherit',

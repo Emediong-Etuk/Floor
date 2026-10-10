@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Card, ErrorNote, Screen, Spinner } from '@/components/ui';
 import { DEMO_MODE, TOKENS, addressUrl, deployment, txUrl } from '@/lib/config';
 import { short, usd } from '@/lib/format';
@@ -43,6 +43,11 @@ export default function DemoPage() {
   const [faucet, setFaucet] = useState<string>();
   const [result, setResult] = useState<PriceResult>();
   const [custom, setCustom] = useState('');
+  const resultRef = useRef<HTMLDivElement>(null);
+  // On a phone the outcome sits below the price buttons: bring it into view when it arrives.
+  useEffect(() => {
+    if (result) resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [result]);
   const status = useQuery({
     queryKey: ['keeper-status'],
     refetchInterval: 5_000,
@@ -201,7 +206,7 @@ export default function DemoPage() {
             </p>
           )}
           {result && (
-            <div className="space-y-1 text-sm" data-testid="demo-result">
+            <div ref={resultRef} className="space-y-1 text-sm" data-testid="demo-result">
               <p>
                 {result.symbol} {usd(BigInt(result.previousE18))} →{' '}
                 <b>{usd(BigInt(result.priceE18))}</b>{' '}

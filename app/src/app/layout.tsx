@@ -22,7 +22,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Before first paint: returning (signed-in) visitors skip the welcome screen. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('floor-signed-in')==='1')document.documentElement.dataset.returning='1'}catch(e){}",
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <Providers>
           {children}

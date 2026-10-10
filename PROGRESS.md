@@ -13,7 +13,7 @@ Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exac
 | 3: Keeper                | 🔨 Testnet ✅ (fills in ~0.5 s); mainnet waits  |
 | 4: Frontend MVP          | ✅ Built + e2e green; needs Privy id + Vercel   |
 | 5: Notifications         | ✅ Built + tested; needs VAPID keys + Upstash   |
-| 6: Polish and submission | —                                               |
+| 6: Polish and submission | ✅ Done; video + live URL wait on Greg          |
 
 ## Phase 0 (2026-10-10)
 
@@ -203,6 +203,38 @@ Done:
 Not verified: a real push reaching a phone. That needs the deployed app with VAPID keys
 (Android Chrome, or an installed iOS PWA). Phase 5's done-criterion is checked on Greg's
 phone after the Vercel deploy.
+
+## Phase 6 (2026-10-10): polish and submission
+
+Plan: accessibility (axe in Playwright) → copy and states pass → Lighthouse → README with real
+screenshots → demo script with recording checklist → full pitch outline → submission
+checklist.
+
+Done:
+
+- Accessibility: `e2e/a11y.spec.ts` runs axe (WCAG 2.1 A/AA) on every screen; all pass.
+  Screens now use a `<main>` landmark.
+- Lighthouse (mobile, `/`): performance 61 → **91** (LCP 6 s → 2.4 s) by loading Privy after
+  first paint; accessibility 98 → **100**; best practices 100; SEO 100.
+- States: no flash of the welcome screen for returning users; the sign-in button waits for
+  the wallet; a "can't reach Monad" note instead of zero balances when reads fail; the
+  `/demo` result scrolls into view above the nav.
+- E2E order is enforced with Playwright projects (flow, then a11y). 5/5 pass.
+- README rewritten: problem, what it does, proof table, how it works, trust model (including
+  the owner's power to replace the oracle), run/env/tests, limitations, roadmap.
+- `docs/screenshots/` (iPhone 13, from a real anvil run via `e2e/screenshots.mjs`).
+- `docs/demo-script.md`, `docs/pitch-outline.md` (full), `docs/submission.md`.
+- `docs/architecture.md` diagram updated to the as-built design (on-demand keeper, push).
+
+Verify:
+
+```bash
+pnpm contracts:test && pnpm test && pnpm typecheck && pnpm lint
+pnpm app:e2e
+```
+
+Not done (needs Greg): the live Vercel URL, a real push on a phone, the demo video, the
+mainnet deploy and fill, and the Team section.
 
 ## Blockers / needs Greg
 

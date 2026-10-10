@@ -8,6 +8,7 @@ import {
   Chip,
   DistanceBar,
   ErrorNote,
+  OfflineNote,
   Screen,
   Skeleton,
   Steps,
@@ -40,8 +41,11 @@ export default function ProtectionPage({ params }: { params: Promise<{ id: strin
   if (!p) {
     return (
       <Screen title="Protection" back="/">
-        {orders.isLoading ? (
-          <Skeleton className="h-64" />
+        {!orders.data ? (
+          <>
+            <OfflineNote show={orders.isError} />
+            <Skeleton className="h-64" />
+          </>
         ) : (
           <Card>Protection not found for this wallet.</Card>
         )}

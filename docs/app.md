@@ -91,10 +91,17 @@ the faucet route.
 
 ## Run locally
 
+Against Monad testnet (needs a Privy App ID):
+
 ```bash
 cp app/.env.example app/.env.local   # fill in the values above
 pnpm app:dev                         # http://localhost:3000
 ```
+
+On a local chain with no accounts at all: `cd app && node e2e/run.mjs --serve` starts anvil
+(Monad mode), deploys the demo contracts and serves a production build at
+http://127.0.0.1:3101 with the local test wallet. Ctrl+C stops everything. With it running,
+`PLAYWRIGHT_CHROMIUM_PATH=... node e2e/screenshots.mjs` regenerates `docs/screenshots/`.
 
 ## Tests
 
@@ -105,7 +112,25 @@ local anvil chain (Monad mode, 400 ms blocks) with a fresh DeployDemo. It covers
    drops 20% → the keeper sells → Home empties and Activity shows "19.94 USDC" with the tx
    link;
 2. edit a floor, then cancel;
-3. readable validation when protecting more than you hold.
+3. readable validation when protecting more than you hold;
+4. the installable PWA (manifest icons, service worker, alerts card);
+5. accessibility: axe (WCAG 2.1 A/AA rules) on every screen, signed in with a live
+   protection. It runs after the flow spec (Playwright project dependency), since both share
+   one wallet and chain.
+
+## Performance and accessibility
+
+Lighthouse 13 (mobile, local production build of `/`): performance 91, accessibility 100,
+best practices 100, SEO 100. What got it there:
+
+- Privy is loaded as its own chunk after first paint (`src/lib/privy-wallet.tsx`), so the
+  welcome screen renders without waiting for the wallet SDK. Until it arrives, the wallet
+  reports "loading" and the sign-in button says "Loading…".
+- A returning signed-in user sees a skeleton instead of a flash of the welcome screen (an
+  inline script in `layout.tsx` reads a localStorage flag before first paint).
+- Every screen has a `<main>` landmark, labelled inputs and sufficient contrast.
+- If chain reads fail, screens say "Can't reach the Monad network right now" instead of
+  showing zero balances.
 
 On anvil only, the e2e run uses a local test-key wallet in place of Privy (guarded to chain
 31337). Production always uses Privy.
