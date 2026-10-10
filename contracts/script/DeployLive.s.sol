@@ -27,7 +27,7 @@ contract DeployLive is Script {
 
     function run() external returns (Live memory l) {
         if (block.chainid != M.CHAIN_ID) revert WrongChain(block.chainid);
-        uint256 pk = vm.envUint("DEPLOYER_PRIVATE_KEY");
+        uint256 pk = DeploymentIO.privateKey("DEPLOYER_PRIVATE_KEY");
         address deployer = vm.addr(pk);
         uint16 fee = uint16(vm.envOr("EXECUTOR_FEE_BPS", uint256(10)));
         uint256 capUsd = vm.envOr("MAX_ORDER_USD", uint256(500));

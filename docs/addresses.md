@@ -132,6 +132,35 @@ through Kuru, so a direct Kuru integration is stretch goal 8 only.
 
 ## Floor deployments
 
-🔲 Filled in Phase 2: FloorOrders, MockOracle / PythAdapter, MockRouter and the MockERC20s on
-testnet, and FloorOrders and PythAdapter on mainnet. Each entry gets its explorer link and deploy
-transaction.
+### Monad testnet (10143), demo mode: deployed 2026-10-10
+
+All 7 contracts are verified on MonadVision (Sourcify). The machine-readable copy is
+`contracts/deployments/10143.json`, and the transaction logs are in
+`contracts/broadcast/*/10143/`.
+
+| Contract                                          | Address                                                                                                                            |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| FloorOrders                                       | [`0x940Bc18DEf074037D4D31966b732421986193Aef`](https://testnet.monadvision.com/address/0x940Bc18DEf074037D4D31966b732421986193Aef) |
+| MockOracle                                        | [`0x077298838c88C393b8e6A020547c8359e7F4288A`](https://testnet.monadvision.com/address/0x077298838c88C393b8e6A020547c8359e7F4288A) |
+| MockRouter (swap target + spender)                | [`0xd4539DD2cCBF8Cc14BB07e1FFaD919420101F653`](https://testnet.monadvision.com/address/0xd4539DD2cCBF8Cc14BB07e1FFaD919420101F653) |
+| WMON (Floor Demo, 18 dec, faucet cap 10,000/call) | [`0xf4E6a669007d9F4d12db92CeA065361b8dcF4d67`](https://testnet.monadvision.com/address/0xf4E6a669007d9F4d12db92CeA065361b8dcF4d67) |
+| WETH (Floor Demo, 18 dec, cap 1/call)             | [`0x4Fd94965A5aF0e12fe86eaE2A02e4263267b03F0`](https://testnet.monadvision.com/address/0x4Fd94965A5aF0e12fe86eaE2A02e4263267b03F0) |
+| cbBTC (Floor Demo, 8 dec, cap 0.01/call)          | [`0x0b63AFaAc99Cf241A70972892fdBe32E89141BE5`](https://testnet.monadvision.com/address/0x0b63AFaAc99Cf241A70972892fdBe32E89141BE5) |
+| USDC (Floor Demo, 6 dec, cap 1,000/call)          | [`0x6DE40fA61A33AeeE1fE30e1b36EAa0f3E510F52F`](https://testnet.monadvision.com/address/0x6DE40fA61A33AeeE1fE30e1b36EAa0f3E510F52F) |
+
+- **Owner** (deployer, also the MockOracle/MockRouter owner): `0x1e2e9BCFaC764Ee6073EcFb50A707683df744eBF`.
+  There's no `/demo` operator yet. Set it with `setOperator` once the panel's server key
+  exists.
+- **Start block:** 69811360. **Seed prices:** MON $0.025, ETH $2,500, BTC $83,000, USDC $1.
+  Executor fee 0.1%.
+- **Smoke check, passed:** a bracket was created
+  ([tx](https://testnet.monadvision.com/tx/0x1f0a7b8c4141251f03ffcdafb08d7e52c907961411133a0cf7fb198faf15367f)) and cancelled
+  ([tx](https://testnet.monadvision.com/tx/0x374a5b318a5ed6155268ead42e8a783ed2eed1947c46c260327755097e1332be)). Then a full
+  fill: 1,000 WMON protected at $0.0225, price crashed to $0.02, `execute`
+  ([tx](https://testnet.monadvision.com/tx/0x8915c8ff468b779614a5d41c43b425909adaecf0689b7ea645d59dd5357b45cd)) paid the owner
+  19.94 USDC net. Afterwards the demo price was put back to $0.025.
+- **Cost:** about 1.27 MON for the deploy and smoke check together, at 102 gwei.
+
+### Monad mainnet (143), live mode
+
+🔲 Not deployed. It waits for Greg's go-ahead and about 1.5 MON on the deployer (`docs/deploy.md`).

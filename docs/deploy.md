@@ -29,7 +29,8 @@ confidence < 0.1%), and the bracket create/cancel worked against real WMON.
 1. Make a **fresh** deployer key and fund it with about 3 MON from https://faucet.monad.xyz.
    - DeployDemo is 20 txs and about 10.4M gas, roughly 1.1 MON at 102 gwei.
    - Smoke with a fill is about 1M gas.
-2. `cp contracts/.env.example contracts/.env` and set `DEPLOYER_PRIVATE_KEY`, plus
+2. `cp contracts/.env.example contracts/.env` and set `DEPLOYER_PRIVATE_KEY` (with or without
+   `0x`), plus
    `DEMO_OPERATOR_ADDRESS` if the `/demo` panel's server key exists already. Otherwise the
    owner can call `setOperator` later on MockOracle and MockRouter.
 3. `pnpm contracts:deploy:demo`. This deploys and verifies on MonadVision (Sourcify, no API

@@ -36,8 +36,8 @@ contract Smoke is Script {
     }
 
     function run() external {
-        uint256 pk = vm.envOr("SMOKE_PRIVATE_KEY", uint256(0));
-        if (pk == 0) pk = vm.envUint("DEPLOYER_PRIVATE_KEY");
+        uint256 pk = DeploymentIO.privateKeyOr("SMOKE_PRIVATE_KEY");
+        if (pk == 0) pk = DeploymentIO.privateKey("DEPLOYER_PRIVATE_KEY");
         Ctx memory c = _load(vm.addr(pk));
 
         vm.startBroadcast(pk);

@@ -5,15 +5,15 @@ Hackathon deadline: **TODO: Greg to fill in** · Team: **TODO** · Repo: github.
 
 ## Phase status
 
-| Phase                    | Status                                         |
-| ------------------------ | ---------------------------------------------- |
-| 0: Recon and setup       | ✅ Done (2026-10-10)                           |
-| 1: Contracts             | ✅ Done (2026-10-10), waiting on Greg's review |
-| 2: Deploy                | 🔨 Scripts done + rehearsed; needs keys + MON  |
-| 3: Keeper                | —                                              |
-| 4: Frontend MVP          | — (D-005 open)                                 |
-| 5: Notifications         | —                                              |
-| 6: Polish and submission | —                                              |
+| Phase                    | Status                                          |
+| ------------------------ | ----------------------------------------------- |
+| 0: Recon and setup       | ✅ Done (2026-10-10)                            |
+| 1: Contracts             | ✅ Done (2026-10-10), waiting on Greg's review  |
+| 2: Deploy                | 🔨 Testnet ✅ (verified + smoke); mainnet waits |
+| 3: Keeper                | —                                               |
+| 4: Frontend MVP          | — (D-005 open)                                  |
+| 5: Notifications         | —                                               |
+| 6: Polish and submission | —                                               |
 
 ## Phase 0 (2026-10-10)
 
@@ -99,21 +99,29 @@ Done:
   never look like a real mainnet deploy.
 - Runbook: `docs/deploy.md`, covering gas and MON needed, verification and ownership handover.
 
-Left for Phase 2: the real testnet deploy and verification, the testnet smoke run, the mainnet
-deploy (after Greg confirms) and the mainnet smoke run, then record the addresses.
+### Testnet deploy (2026-10-10) ✅
+
+- DeployDemo is on Monad testnet, and all 7 contracts are verified on MonadVision. Addresses
+  and transactions are in `docs/addresses.md`.
+- Smoke check on testnet: create → cancel worked, then a full fill (protect → crash → execute →
+  19.94 USDC net). Confirmed independently with `cast`: order FILLED, active set empty,
+  FloorOrders holds 0 tokens, price restored.
+- The scripts now accept private keys with or without `0x`. Greg's env secret is bare hex.
+
+Left for Phase 2: the mainnet deploy and smoke check (Greg's go-ahead, about 1.5 MON on
+`0x1e2e9BCFaC764Ee6073EcFb50A707683df744eBF` or a separate mainnet key).
 
 ## Blockers / needs Greg
 
-1. **Phase 2 testnet deploy:** a fresh deployer key with about 3 testnet MON (faucet.monad.xyz
-   needs a human). Either add it as the environment secret `DEPLOYER_PRIVATE_KEY` so Claude
-   can deploy, or run `pnpm contracts:deploy:demo` yourself (`docs/deploy.md`). The keeper key
-   is separate and needs more than 10 MON. The mainnet deploy needs about 1.5 MON and your
-   go-ahead.
-2. Hackathon deadline and team, for PROGRESS.md and the schedule.
-3. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
+1. **Mainnet deploy:** Greg's go-ahead plus about 1.5 mainnet MON on the deployer. Ideally use
+   a separate mainnet-only key; tiny real funds only.
+2. **Keeper key (Phase 3):** a separate testnet key with more than 10 MON (Monad reserve
+   balance), as the env secret `KEEPER_PRIVATE_KEY`.
+3. Hackathon deadline and team, for PROGRESS.md and the schedule.
+4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.
-4. Claim the QuickNode perk and make a 0x dashboard account before Phase 2 (`docs/perks.md`).
-5. Five minutes on the Monad App Hub and Kuru Pro for existing TP/SL features
+5. Claim the QuickNode perk and make a 0x dashboard account before the mainnet deploy (`docs/perks.md`).
+6. Five minutes on the Monad App Hub and Kuru Pro for existing TP/SL features
    (`docs/pitch-outline.md`).
 
 ## Decisions

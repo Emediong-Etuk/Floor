@@ -39,7 +39,7 @@ contract DeployDemo is Script {
 
     function run() external returns (Demo memory d) {
         if (block.chainid != 10_143 && block.chainid != 31_337) revert WrongChain(block.chainid);
-        uint256 pk = vm.envUint("DEPLOYER_PRIVATE_KEY");
+        uint256 pk = DeploymentIO.privateKey("DEPLOYER_PRIVATE_KEY");
         address deployer = vm.addr(pk);
         address operator = vm.envOr("DEMO_OPERATOR_ADDRESS", address(0));
         uint16 fee = uint16(vm.envOr("EXECUTOR_FEE_BPS", uint256(DEFAULT_FEE_BPS)));
