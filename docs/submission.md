@@ -2,6 +2,18 @@
 
 Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg · ➖ optional.
 
+**Deadline: Tue 2026-10-13, 7:59 AM WAT** (Mon 11:59 PM PT, 06:59 UTC). Plan to submit by
+**Mon 2026-10-12, 10:00 PM WAT**, with a code and docs freeze at **6:00 PM WAT**, so nothing
+depends on being awake at 7 AM.
+
+| When (WAT)        | What                                                                      |
+| ----------------- | ------------------------------------------------------------------------- |
+| Sun 11 Oct, noon  | Decide on mainnet (go / no-go). Send the team line.                       |
+| Sun 11 Oct, night | If go: mainnet deploy + one tiny real fill. Dry-run the demo script.      |
+| Mon 12 Oct, 2 PM  | Demo video recorded and uploaded.                                         |
+| Mon 12 Oct, 6 PM  | Freeze: video link and final numbers in README; last PR merged; CI green. |
+| Mon 12 Oct, 10 PM | Submit. Reset the demo price; top up the deployer for judges.             |
+
 ## Required
 
 | Item                                                                                                     | State | Notes                                                                                                                                                                 |
@@ -11,7 +23,7 @@ Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg �
 | Verified testnet contract addresses                                                                      | ✅    | `docs/addresses.md` (7 contracts, verified on MonadVision).                                                                                                           |
 | Verified mainnet addresses and at least one mainnet fill tx                                              | ⏳    | Needs Greg's go-ahead and about 1.5 MON (`docs/deploy.md`), a 0x API key and a funded keeper. Until then: the mainnet-fork rehearsal and fork tests are the evidence. |
 | README: problem, solution, screenshots, architecture, trust model, run, env, tests, limitations, roadmap | ✅    | `README.md`. Add the live URL and the video link once they exist.                                                                                                     |
-| Demo video (≤ 3 min)                                                                                     | ⏳    | Script and recording checklist: `docs/demo-script.md`. Record after the Vercel deploy.                                                                                |
+| Demo video (≤ 3 min)                                                                                     | ⏳    | Script and recording checklist: `docs/demo-script.txt`. Record after the Vercel deploy.                                                                               |
 | Pitch outline                                                                                            | ✅    | `docs/pitch-outline.md`. Team section needs Greg's line and links.                                                                                                    |
 
 ## Phase 6 polish
@@ -33,7 +45,7 @@ Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg �
    Done.
 4. Optional: mainnet deploy and one tiny real fill through 0x (`docs/deploy.md`,
    `docs/keeper.md`).
-5. Record the demo with `docs/demo-script.md`; upload it.
+5. Record the demo with `docs/demo-script.txt`; upload it.
 6. Put the video link at the top of `README.md` (the live URL is already there).
 7. Fill in the Team section of `docs/pitch-outline.md`.
 8. Submit: repo URL, live URL, video, contract addresses (testnet, plus mainnet if deployed),

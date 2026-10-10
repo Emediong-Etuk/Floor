@@ -67,12 +67,20 @@ function Welcome() {
           ))}
         </ol>
         <div className="space-y-3">
-          <Button onClick={login} className="w-full" disabled={!ready}>
+          <Button onClick={() => login('email')} className="w-full" disabled={!ready}>
             {ready ? 'Continue with email' : 'Loading…'}
           </Button>
           <p className="text-center text-sm text-muted">
             No seed phrase. You stay in control of your tokens.
           </p>
+          <Button
+            variant="secondary"
+            onClick={() => login('wallet')}
+            className="w-full"
+            disabled={!ready}
+          >
+            Use my own wallet (MetaMask…)
+          </Button>
         </div>
       </div>
     </Screen>

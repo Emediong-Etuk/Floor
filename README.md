@@ -27,7 +27,8 @@ on a phone.
 
 ## What Floor does
 
-1. **Sign in with email.** No seed phrase: Privy creates an embedded wallet.
+1. **Sign in with email.** No seed phrase: Privy creates an embedded wallet. Or use your own
+   wallet (MetaMask and others) on Monad testnet.
 2. **Pick a token and set a floor** with one slider (default −10%). Optionally, cash out if it
    goes up (default +20%). Floor shows a plain-English summary: _"If WMON drops to $0.0225,
    Floor will sell 2,000 WMON for about 44.96 USDC (at least 44.55)."_
@@ -185,7 +186,7 @@ the app e2e on every push.
 8. An open keeper network and Kuru as a second venue.
 
 Pitch: [`docs/pitch-outline.md`](docs/pitch-outline.md) · Demo script:
-[`docs/demo-script.md`](docs/demo-script.md) · Submission checklist:
+[`docs/demo-script.txt`](docs/demo-script.txt) · Submission checklist:
 [`docs/submission.md`](docs/submission.md) · Status: [`PROGRESS.md`](PROGRESS.md)
 
 ## License

@@ -18,6 +18,17 @@ Every number on screen comes from the chain: oracle prices, balances, orders and
 app never fakes a transaction. Each write is simulated first, so contract errors show up as
 plain English (`src/lib/errors.ts`).
 
+## Signing in
+
+- **Continue with email** (the default): Privy creates an embedded wallet. No seed phrase, and
+  no confirmation pop-ups: the app shows its own step-by-step progress.
+- **Use my own wallet (MetaMask…)**: sign in with MetaMask, Rainbow or any other Ethereum
+  wallet. On a phone, the MetaMask and WalletConnect options open the wallet app. The wallet
+  asks to confirm every transaction. Before the first one, Floor switches the wallet to Monad
+  testnet, adding the network if the wallet doesn't have it yet. In demo mode, **Demo → Mint
+  test tokens** also sends 0.2 testnet MON for fees to a wallet that has less than 0.05.
+- This needs **Wallet** (external wallets) enabled under Login methods in the Privy dashboard.
+
 ## On-demand keeper (D-011)
 
 On testnet, prices only move when the `/demo` panel moves them. So `/api/demo/price` sets the
