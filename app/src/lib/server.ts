@@ -7,6 +7,7 @@ import { nonceManager, privateKeyToAccount } from 'viem/accounts';
 import { loadConfig } from '@floor/keeper/config';
 import { sweep, type SweepResult } from '@floor/keeper/sweep';
 import { CHAIN_ID, DEMO_MODE, RPC_URL, chain, deployment } from './config';
+import { notifyOwner } from './push';
 
 const rpc = process.env.RPC_HTTP_URL || RPC_URL;
 
@@ -92,14 +93,14 @@ export function runSweep(maxMs = 12_000): Promise<SweepResult> {
       FLOOR_ADDRESS: deployment.floorOrders,
       ORACLE_ADDRESS: deployment.oracle,
       SWAP_TARGET: deployment.swapTarget,
-      NOTIFY_URL: process.env.NOTIFY_URL,
-      NOTIFY_SECRET: process.env.NOTIFY_SECRET,
       LOG_LEVEL: 'warn',
     }),
     { maxMs },
   )
-    .then((r) => {
+    .then(async (r) => {
       lastSweep = { ...r, at: Date.now() };
+      // Push straight from here (no HTTP hop to /api/notify). Push failures never fail the sweep.
+      await Promise.all(r.events.map((e) => notifyOwner(e.owner, e)));
       return r;
     })
     .finally(() => {

@@ -44,7 +44,7 @@ jobs:
         working-directory: .
 
   typescript:
-    name: TypeScript (shared, keeper)
+    name: TypeScript (shared, keeper, app)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

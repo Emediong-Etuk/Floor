@@ -9,7 +9,9 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "e2e": "node e2e/run.mjs",
-    "sync-deployments": "node scripts/sync-deployments.mjs"
+    "sync-deployments": "node scripts/sync-deployments.mjs",
+    "test": "vitest run",
+    "vapid": "web-push generate-vapid-keys"
   },
   "dependencies": {
     "@floor/keeper": "workspace:*",
@@ -19,13 +21,16 @@
     "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "viem": "2.57.4"
+    "viem": "2.57.4",
+    "web-push": "3.6.7"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "4.3.3",
+    "@types/web-push": "3.6.4",
+    "vitest": "5.0.3"
   }
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { use, useMemo, useState } from 'react';
 import { formatUnits, parseUnits } from 'viem';
 import { convert, executorFee, minOut } from '@floor/shared';
+import { AlertsCard } from '@/components/alerts';
 import { GasBanner } from '@/components/gas';
 import { Button, Card, ErrorNote, Screen, Skeleton, Steps } from '@/components/ui';
 import { approve, createProtection, pokeKeeper } from '@/lib/actions';
@@ -154,6 +155,7 @@ export default function ProtectPage({ params }: { params: Promise<{ symbol: stri
             until it sells.
           </p>
           <Steps steps={steps} />
+          <AlertsCard compact />
           <Link href="/" className="block rounded-xl bg-accent py-3 font-semibold text-accent-ink">
             Done
           </Link>

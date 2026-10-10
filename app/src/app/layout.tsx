@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     'A safety net for crypto holders: set a floor price and Floor sells to USDC automatically.',
   applicationName: 'Floor',
   appleWebApp: { capable: true, title: 'Floor', statusBarStyle: 'black-translucent' },
-  icons: { icon: '/icon.svg', apple: '/icon.svg' },
+  icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
 };
 
 export const viewport: Viewport = {

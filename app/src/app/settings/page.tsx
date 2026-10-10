@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { AlertsCard } from '@/components/alerts';
 import { Button, Card, Screen } from '@/components/ui';
 import { CHAIN_ID, DEMO_MODE, addressUrl, chain, deployment } from '@/lib/config';
 import { short } from '@/lib/format';
@@ -46,6 +47,8 @@ export default function SettingsPage() {
             <Button onClick={login}>Sign in</Button>
           )}
         </Card>
+
+        {authenticated && <AlertsCard />}
 
         <Card className="space-y-2 text-sm">
           <div className="flex justify-between">

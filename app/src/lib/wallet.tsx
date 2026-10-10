@@ -8,7 +8,13 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { PrivyProvider, usePrivy, useSendTransaction, useWallets } from '@privy-io/react-auth';
+import {
+  PrivyProvider,
+  usePrivy,
+  useSendTransaction,
+  useSignMessage,
+  useWallets,
+} from '@privy-io/react-auth';
 import { createWalletClient, http, type Address, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { CHAIN_ID, RPC_URL, chain } from './config';
@@ -28,6 +34,8 @@ export interface FloorWallet {
   login: () => void;
   logout: () => Promise<void>;
   send: (tx: TxRequest) => Promise<Hex>;
+  /** personal_sign, e.g. to prove wallet ownership when turning on push alerts. */
+  signMessage: (message: string) => Promise<Hex>;
 }
 
 const WalletContext = createContext<FloorWallet | null>(null);
@@ -44,6 +52,7 @@ function PrivyBridge({ children }: { children: ReactNode }) {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
   const { sendTransaction } = useSendTransaction();
+  const { signMessage: privySign } = useSignMessage();
   // The embedded wallet Privy creates at first login (email → wallet, no seed phrase).
   const embedded = wallets.find((w) => w.walletClientType === 'privy');
   const address = (embedded?.address ?? user?.wallet?.address) as Address | undefined;
@@ -61,6 +70,18 @@ function PrivyBridge({ children }: { children: ReactNode }) {
     [address, sendTransaction],
   );
 
+  const signMessage = useCallback(
+    async (message: string) => {
+      if (!address) throw new Error('Wallet not ready yet');
+      const { signature } = await privySign(
+        { message },
+        { uiOptions: { showWalletUIs: false }, address },
+      );
+      return signature as Hex;
+    },
+    [address, privySign],
+  );
+
   const value = useMemo<FloorWallet>(
     () => ({
       ready,
@@ -70,8 +91,9 @@ function PrivyBridge({ children }: { children: ReactNode }) {
       login,
       logout,
       send,
+      signMessage,
     }),
-    [ready, authenticated, address, user, login, logout, send],
+    [ready, authenticated, address, user, login, logout, send, signMessage],
   );
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
 }
@@ -111,6 +133,7 @@ function LocalKeyWallet({ children }: { children: ReactNode }) {
       login: () => setAuthenticated(true),
       logout: async () => setAuthenticated(false),
       send: (tx) => client.sendTransaction({ to: tx.to, data: tx.data, value: tx.value ?? 0n }),
+      signMessage: (message) => account.signMessage({ message }),
     }),
     [authenticated, account, client],
   );
@@ -124,6 +147,7 @@ const LOADING: FloorWallet = {
   login: () => undefined,
   logout: async () => undefined,
   send: () => Promise.reject(new Error('Wallet is still loading')),
+  signMessage: () => Promise.reject(new Error('Wallet is still loading')),
 };
 
 export function WalletProvider({ children }: { children: ReactNode }) {

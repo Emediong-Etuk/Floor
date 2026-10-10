@@ -102,3 +102,27 @@ test('readable error when protecting more than you hold', async ({ page }) => {
   await expect(page.getByText("That's more than you have.")).toBeVisible();
   await expect(page.getByRole('button', { name: 'Turn on protection' })).toBeDisabled();
 });
+
+test('installable PWA: manifest icons, service worker, alerts card', async ({ page, request }) => {
+  const manifest = (await (await request.get('/manifest.webmanifest')).json()) as {
+    icons: { sizes: string }[];
+    display: string;
+  };
+  expect(manifest.display).toBe('standalone');
+  expect(manifest.icons.map((i) => i.sizes)).toEqual(
+    expect.arrayContaining(['192x192', '512x512']),
+  );
+  expect((await request.get('/sw.js')).status()).toBe(200);
+  expect((await request.get('/apple-touch-icon.png')).status()).toBe(200);
+
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Continue with email' }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(async () => Boolean(await navigator.serviceWorker.getRegistration('/'))),
+    )
+    .toBe(true);
+  await page.goto('/settings');
+  // The e2e build has no VAPID key, so the card explains that instead of offering a broken toggle.
+  await expect(page.getByTestId('alerts')).toContainText("Push alerts aren't set up");
+});

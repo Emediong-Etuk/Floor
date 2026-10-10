@@ -12,7 +12,7 @@ Hackathon deadline: **about 2026-10-13 (Greg, 2026-10-10: "ends in 3 days"; exac
 | 2: Deploy                | 🔨 Testnet ✅ (verified + smoke); mainnet waits |
 | 3: Keeper                | 🔨 Testnet ✅ (fills in ~0.5 s); mainnet waits  |
 | 4: Frontend MVP          | ✅ Built + e2e green; needs Privy id + Vercel   |
-| 5: Notifications         | —                                               |
+| 5: Notifications         | ✅ Built + tested; needs VAPID keys + Upstash   |
 | 6: Polish and submission | —                                               |
 
 ## Phase 0 (2026-10-10)
@@ -176,13 +176,44 @@ holdings API (Zerion; demo tokens aren't indexed, so balances come from on-chain
 price change (the mock oracle has no history), and the PWA service worker (Phase 5, with
 push).
 
+## Phase 5 (2026-10-10): push notifications
+
+Plan: push backend (store, signed subscribe, payloads, delivery) → service worker and
+Settings toggle with the iOS install hint → PNG icons → tests.
+
+Done:
+
+- `public/sw.js`: push and notification-click handlers. Registered on load.
+- `/api/push/subscribe` (wallet-signed: address + device hash + timestamp, valid for 10 min),
+  `/api/push/unsubscribe` and `/api/notify` (Bearer `NOTIFY_SECRET`, for an always-on
+  keeper). The on-demand sweep pushes its events directly.
+- Storage: Upstash Redis over its REST API (free; the Vercel integration's `KV_*` names also
+  work), with an in-memory fallback for local runs.
+- UI: a "Sale alerts" card in Settings and after protecting. It covers the iOS "Add to Home
+  Screen" case, blocked permission, and a deployment without push configured.
+- PNG icons (192, 512, maskable, Apple touch) rendered from the SVG. The manifest is updated.
+- Tests:
+  - 8 app unit tests: signature proof (wrong wallet, wrong device, stale, garbage), payload
+    text, delivery with dead-device cleanup, Upstash commands, and the subscribe and notify
+    routes.
+  - Playwright 4/4, now including a PWA check (manifest icons, service worker registered,
+    alerts card).
+  - A `web-push` encryption and VAPID check with a real key pair.
+
+Not verified: a real push reaching a phone. That needs the deployed app with VAPID keys
+(Android Chrome, or an installed iOS PWA). Phase 5's done-criterion is checked on Greg's
+phone after the Vercel deploy.
+
 ## Blockers / needs Greg
 
 1. **Mainnet deploy:** Greg's go-ahead plus about 1.5 mainnet MON on the deployer. Ideally use
    a separate mainnet-only key; tiny real funds only.
 2. **Deploy the app (Phase 4):** a Privy App ID (dashboard.privy.io, email login, add the
    Vercel domain), then a Vercel project with root `app` and the env vars in `docs/app.md`.
-   The keeper key exists (15 MON). No paid keeper host is needed (D-011).
+   The keeper key exists (15 MON). No paid keeper host is needed (D-011). For push: run
+   `pnpm --filter @floor/app vapid` once, add the two keys and `VAPID_SUBJECT`, and connect
+   Vercel Storage → Upstash Redis (free). Then turn on alerts on your phone and run a demo
+   crash.
 3. Exact submission time and team, for PROGRESS.md and the schedule.
 4. Commit the build prompt as `FLOOR_BUILD_PROMPT.md` at the repo root, so every session can
    read the spec.

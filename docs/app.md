@@ -38,6 +38,34 @@ as well, use `pnpm keeper:start` (see `docs/keeper.md`).
 | `POST /api/keeper/sweep`                                         | Runs one keeper pass.                                                                         |
 | `GET /api/keeper/status`                                         | Keeper address and balance, active orders, last sweep.                                        |
 
+## Push alerts (Phase 5)
+
+- **Service worker:** `public/sw.js` has no dependencies. It shows the notification, and
+  tapping it opens the right screen. It's registered on load, which together with the
+  manifest and PNG icons makes Floor installable.
+- **Turning alerts on** (Settings, or the success screen after protecting):
+  1. The browser asks for notification permission.
+  2. The device subscribes with the VAPID public key.
+  3. The wallet **signs** "send alerts for this wallet to this device" (the address, a hash of
+     the device endpoint and a timestamp; no transaction, no gas).
+  4. `POST /api/push/subscribe` checks the signature, stores the device in Upstash Redis, and
+     sends an "alerts are on" push.
+- **iPhone:** web push only works in the installed app. Settings shows "Share → Add to Home
+  Screen" first.
+- **Sending:**
+  - The on-demand keeper's events are pushed directly, from the same request that moved the
+    price.
+  - An always-on keeper posts to `POST /api/notify` with `Authorization: Bearer NOTIFY_SECRET`
+    instead (set `NOTIFY_URL=https://<app>/api/notify` in `keeper/.env`).
+  - Devices the push service reports as gone (404/410) are removed.
+- **What gets pushed:**
+  - **Sold:** "Floor hit: sold 1,000 WMON · You got 19.94 USDC at $0.0200 · 0.8 s after the
+    trigger", or the cash-out version.
+  - **Selling now.**
+  - **Waiting for liquidity.**
+  - **Can't sell** (tokens or approval changed).
+  - Messages share a tag per order, so "selling" is replaced by "sold" on the phone.
+
 ## Deploy to Vercel (free tier)
 
 1. **Privy:** create an app at dashboard.privy.io and enable **email** login. Copy the App ID.
