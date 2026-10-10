@@ -9,7 +9,8 @@ cash-out price to lock in profit, and whichever price is hit first wins.
 
 ## Status
 
-Phase 0 (recon and scaffold) is done. See [`PROGRESS.md`](PROGRESS.md) for live status.
+Phase 1 (contracts) is done: 68 Foundry tests, including fuzz and invariant tests, with 100%
+line coverage on `FloorOrders`. See [`PROGRESS.md`](PROGRESS.md) for live status.
 
 ## How it works
 
@@ -23,6 +24,23 @@ Phase 0 (recon and scaffold) is done. See [`PROGRESS.md`](PROGRESS.md) for live 
 
 Architecture: [`docs/architecture.md`](docs/architecture.md). Addresses and sources:
 [`docs/addresses.md`](docs/addresses.md). Decisions: [`docs/DECISIONS.md`](docs/DECISIONS.md).
+
+## Security model (contracts)
+
+- **Swap venues are allowlisted** as (target, spender) pairs. An executor can't make
+  `FloorOrders` call a token or itself, so nobody can drain approvals by turning the contract
+  against users.
+- **Approvals are exact and short-lived.** For each fill, the venue gets approval for exactly
+  `amountIn`, and it is reset to 0 in the same transaction.
+- **Effects come before interactions,** and every state-changing entry point is
+  `nonReentrant`. An order (and its bracket sibling) is closed before any external call.
+- **Fills are judged by balance changes,** not by what the venue returns. The output must
+  reach `minOut = oracle value × (1 − maxSlippageBps)`.
+- **Worst case:** a malicious executor can at most fill your order at `minOut`, within your
+  max price difference setting. Slippage is capped at 5% and the executor fee at 0.5%.
+- **The contract holds nothing between calls.** This is checked by an invariant test.
+- `Ownable2Step` and `Pausable`. Pausing blocks new orders and fills but never cancels. No
+  upgradeability and no `delegatecall`.
 
 ## Repo layout
 

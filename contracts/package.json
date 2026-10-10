@@ -1,0 +1,9 @@
+{
+  "name": "@floor/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Floor Solidity contracts (Foundry). npm deps here are Solidity sources only.",
+  "devDependencies": {
+    "@pythnetwork/pyth-sdk-solidity": "4.3.1"
+  }
+}

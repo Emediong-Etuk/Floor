@@ -52,7 +52,7 @@ target, data)` arguments sent to AllowanceHolder. In the worst case they route i
 - The keeper passes `taker = FloorOrders` and `txOrigin = keeper EOA`. 0x needs `txOrigin`
   when the taker is a contract.
 
-## D-004 Where live-mode prices come from (2026-10-10, **open: Greg decides**)
+## D-004 Where live-mode prices come from (2026-10-10, **decided: option C**, Greg)
 
 What changed since the build prompt was written: since Pyth's 2026-08-26 upgrade, **Hermes
 requires an API key** (free trial, then paid plans). The prompt's live design pulls a Hermes
@@ -77,6 +77,19 @@ Recommendation: **C**. It ships without a paid dependency and keeps the 400 ms s
 pitch if Greg takes the free trial. It needs Greg's OK because it changes §6.4 (a per-token
 max age) and §7 (Hermes becomes optional).
 
+**Decision (Greg, 2026-10-10): option C.** What this changes in the spec:
+
+- §6.2: `PythAdapter.update([])` is a no-op that refunds `msg.value`, and `updateFee([])` is 0.
+  With data, the adapter pays exactly Pyth's fee and refunds the rest.
+- §6.4: `setMaxOracleAge(uint32)` stays as the global default (15 s). A new
+  `setTokenMaxOracleAge(token, uint32)` overrides it per token (0 = use the default). Push-only
+  live config: about 3900 s per token (1 h heartbeat + margin). With a Hermes key: back to 15 s.
+- §7: the keeper attaches a Hermes update only when `HERMES_URL` and `HERMES_API_KEY` are set.
+  Otherwise it sends an empty `priceUpdate`.
+- §6.5 step 2: `FloorOrders` forwards exactly `updateFee(priceUpdate)` to the oracle and
+  refunds the rest of `msg.value` to the executor. (Pyth keeps overpayments, so we never send
+  more than the fee.)
+
 ## D-005 Frontend base (2026-10-10, **open: decide before Phase 4**)
 
 The recommended Monad template
@@ -98,3 +111,33 @@ defines both chains from the Monad docs.
 
 Work happens on `claude/magical-albattani-fh3lg4` and merges into `main` by PR, so `main`
 only ever has CI-green work.
+
+## D-008 Pyth Solidity SDK from npm (2026-10-10, decided)
+
+`@pythnetwork/pyth-sdk-solidity` 4.3.1 is a dev dependency of `contracts/package.json` (a pnpm
+workspace package) and is remapped in `foundry.toml`. Pyth publishes the SDK on npm. Its git
+home is the very large `pyth-crosschain` monorepo, so a submodule would be slow. The SDK's
+`MockPyth` drives the adapter tests. This means `pnpm install` has to run before
+`forge build`, and CI does that.
+
+## D-009 Phase 1 contract details (2026-10-10, decided; flag anything Greg disagrees with)
+
+- **Bracket allowance:** a bracket needs an allowance of `amountIn` once, not twice, because
+  only one leg can ever fill. The app's "approve exactly" sum counts a bracket once.
+- **Order ids** start at 1, so `linkedOrderId = 0` means "no sibling".
+- **`checkTrigger`** reads the cached price and ignores freshness and confidence (the keeper
+  may bring a fresh update). `execute` enforces both.
+- **Token decimals** (≤ 18) are cached when a token is allowlisted. A token can't be
+  allowlisted while it's a venue, and a venue can't be added while it's a token.
+- **Delisting** a token blocks `execute` for its orders. Users can still cancel.
+- **Expiry is per leg.** `expire()` closes one order. Both legs of a bracket share the expiry
+  they were created with.
+- **Pyth publish times ahead of the block timestamp** count as age 0. Monad blocks are
+  ~400 ms but timestamps are whole seconds.
+- **`maxSlippageBps = 0` is allowed.** It just never fills against a venue with any spread.
+- **Lint warnings accepted by design** (`forge lint src`):
+  - `arbitrary-send-erc20`: `transferFrom(owner)` is the product.
+  - `arbitrary-send-eth`: refunds go to the executor.
+  - `block-timestamp`: expiry and oracle age.
+  - `reentrancy-events`: all state-changing entry points are `nonReentrant`.
+  - `missing-zero-check` on the mocks' `setOperator`: 0 disables the operator.

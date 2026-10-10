@@ -3,7 +3,7 @@
 [profile.default]
 src = "src"
 out = "out"
-libs = ["lib"]
+libs = ["lib", "node_modules"]
 test = "test"
 script = "script"
 solc_version = "0.8.30"
@@ -17,6 +17,8 @@ network = "monad"
 remappings = [
   "forge-std/=lib/forge-std/src/",
   "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+  # Pyth's Solidity SDK ships on npm only (installed by `pnpm install`).
+  "@pythnetwork/pyth-sdk-solidity/=node_modules/@pythnetwork/pyth-sdk-solidity/",
 ]
 
 [fuzz]
