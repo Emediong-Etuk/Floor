@@ -6,7 +6,7 @@ Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg �
 
 | Item                                                                                                     | State | Notes                                                                                                                                                                 |
 | -------------------------------------------------------------------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Live PWA URL (Vercel) in demo mode                                                                       | ⏳    | Needs a Privy App ID and the Vercel project (`docs/app.md` → Deploy to Vercel). Everything else is ready.                                                             |
+| Live PWA URL (Vercel) in demo mode                                                                       | ✅    | https://floor-delta-ruby.vercel.app (Privy email login verified on the live domain; server keeper configured).                                                        |
 | Mainnet mode behind a toggle or separate URL                                                             | ⏳ ➖ | Needs the mainnet deploy. A second Vercel project with `NEXT_PUBLIC_CHAIN_ID=143`, `NEXT_PUBLIC_DEMO_MODE=false`, plus an always-on keeper.                           |
 | Verified testnet contract addresses                                                                      | ✅    | `docs/addresses.md` (7 contracts, verified on MonadVision).                                                                                                           |
 | Verified mainnet addresses and at least one mainnet fill tx                                              | ⏳    | Needs Greg's go-ahead and about 1.5 MON (`docs/deploy.md`), a 0x API key and a funded keeper. Until then: the mainnet-fork rehearsal and fork tests are the evidence. |
@@ -16,25 +16,25 @@ Build prompt §13, with the state as of 2026-10-10. ✅ done · ⏳ needs Greg �
 
 ## Phase 6 polish
 
-| Item                                     | State | Notes                                                                                                                                     |
-| ---------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Empty, loading and error states          | ✅    | Skeletons while loading; empty states on Home and Activity; a "can't reach Monad" note when reads fail; contract errors in plain English. |
-| Accessibility                            | ✅    | axe (WCAG 2.1 A/AA) passes on every screen in Playwright; `<main>` landmark; labelled controls.                                           |
-| Lighthouse (mobile)                      | ✅    | 91 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on a local production build.                                       |
-| Installable PWA                          | ✅    | Manifest, PNG icons, service worker (tested in Playwright).                                                                               |
-| Push on Android Chrome and installed iOS | ⏳    | Built and unit-tested; needs VAPID keys + Upstash on Vercel, then one real crash on Greg's phone.                                         |
+| Item                            | State | Notes                                                                                                                                     |
+| ------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Empty, loading and error states | ✅    | Skeletons while loading; empty states on Home and Activity; a "can't reach Monad" note when reads fail; contract errors in plain English. |
+| Accessibility                   | ✅    | axe (WCAG 2.1 A/AA) passes on every screen in Playwright; `<main>` landmark; labelled controls.                                           |
+| Lighthouse (mobile)             | ✅    | 91 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on a local production build.                                       |
+| Installable PWA                 | ✅    | Manifest, PNG icons, service worker (tested in Playwright).                                                                               |
+| Push on a real phone            | ✅    | Verified by Greg on 2026-10-10 on the live app: alerts turned on, a demo crash sold, and the push arrived.                                |
 
 ## Before you submit (Greg)
 
-1. Create the Privy app (email login) and add the Vercel domain to allowed origins.
-2. Deploy to Vercel with the env vars in `docs/app.md`. Generate VAPID keys
-   (`pnpm --filter @floor/app vapid`) and connect Upstash Redis.
-3. On your phone: open the URL, Add to Home Screen, sign in, turn on alerts, run one
-   protect → crash → sold. Confirm the push arrives.
+1. ~~Create the Privy app (email login) and add the Vercel domain to allowed origins.~~ Done.
+2. ~~Deploy to Vercel with the env vars in `docs/app.md`; add VAPID keys and Upstash Redis.~~
+   Done.
+3. ~~On your phone: install, sign in, turn on alerts, protect → crash → sold, push arrives.~~
+   Done.
 4. Optional: mainnet deploy and one tiny real fill through 0x (`docs/deploy.md`,
    `docs/keeper.md`).
 5. Record the demo with `docs/demo-script.md`; upload it.
-6. Put the live URL and the video link at the top of `README.md`.
+6. Put the video link at the top of `README.md` (the live URL is already there).
 7. Fill in the Team section of `docs/pitch-outline.md`.
 8. Submit: repo URL, live URL, video, contract addresses (testnet, plus mainnet if deployed),
    and the 474 ms testnet fill tx.
