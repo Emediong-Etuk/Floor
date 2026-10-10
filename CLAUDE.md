@@ -45,6 +45,9 @@ pnpm lint                  # prettier --check + forge fmt --check
 pnpm format
 pnpm contracts:rehearse:local   # anvil (Monad mode): DeployDemo + Smoke with a fill
 pnpm contracts:rehearse:fork    # Monad mainnet fork: DeployLive + Smoke
+pnpm --filter @floor/shared abi:sync   # after changing contracts (forge build first)
+pnpm keeper:start               # keeper (keeper/.env; docs/keeper.md)
+pnpm e2e:testnet                # testnet: mint → protect → crash → keeper fills
 ```
 
 Deploying for real: `docs/deploy.md`. Mainnet deploys need Greg's go-ahead.

@@ -141,3 +141,23 @@ home is the very large `pyth-crosschain` monorepo, so a submodule would be slow.
   - `block-timestamp`: expiry and oracle age.
   - `reentrancy-events`: all state-changing entry points are `nonReentrant`.
   - `missing-zero-check` on the mocks' `setOperator`: 0 disables the operator.
+
+## D-010 Keeper design (2026-10-10, decided)
+
+- **Notify auth** uses `Authorization: Bearer <NOTIFY_SECRET>` on POST `/api/notify`. The
+  app's route (Phase 5) must check this header.
+- **Notification types:** `selling` (tx sent), `filled` (amounts and latency),
+  `waiting-liquidity` (once per trigger episode) and `unfillable` (once until it recovers).
+- **Latency** is measured from the keeper first seeing the trigger to its receipt. The
+  testnet e2e also reports the wall time from the crash confirming to FILLED.
+- **Blocks and events:** websocket subscriptions when `RPC_WS_URL` is set, otherwise HTTP
+  polling every 400 ms. viem falls back from `eth_newFilter` to `eth_getLogs` where filters
+  aren't supported.
+- **Reads:** prices for all tokens in one Multicall3 call per block. Anvil has no Multicall3,
+  so local runs fall back to parallel `eth_call`s.
+- **Hermes:** REST polling with a 1 s cache. SSE streaming is deferred until there's a key.
+- **Pending transactions:** with no receipt after 2 min, a tx is treated as dropped and the
+  order may be retried. There's no automatic speed-up or replacement: Monad has no global
+  mempool, and a stuck nonce is rare at 400 ms blocks.
+- **Overlapping ticks** are skipped, not queued. Fills run concurrently, but only one per
+  order at a time.

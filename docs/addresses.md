@@ -160,6 +160,9 @@ All 7 contracts are verified on MonadVision (Sourcify). The machine-readable cop
   ([tx](https://testnet.monadvision.com/tx/0x8915c8ff468b779614a5d41c43b425909adaecf0689b7ea645d59dd5357b45cd)) paid the owner
   19.94 USDC net. Afterwards the demo price was put back to $0.025.
 - **Cost:** about 1.27 MON for the deploy and smoke check together, at 102 gwei.
+- **Keeper e2e (Phase 3):** the keeper filled order 4
+  ([tx](https://testnet.monadvision.com/tx/0xb9dc49f709ad033b40f45e05768f68bbdc3f2308c35b5bd26664ad96ceda7fab))
+  474 ms after the price crash confirmed (`docs/keeper.md`).
 
 ### Monad mainnet (143), live mode
 

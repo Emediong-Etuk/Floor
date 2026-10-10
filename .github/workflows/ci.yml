@@ -36,6 +36,12 @@ jobs:
       - run: forge build --sizes
       - run: forge test -vvv
       - run: forge coverage --report summary --no-match-coverage "(test|script)"
+      # Generated ABIs in packages/shared must match this build.
+      - run: pnpm --filter @floor/shared abi:check
+        working-directory: .
+      # Keeper end-to-end on anvil (needs Foundry, so it runs here; skipped in the TS job).
+      - run: pnpm --filter @floor/keeper exec vitest run test/e2e.anvil.test.ts
+        working-directory: .
 
   typescript:
     name: TypeScript (shared, keeper)

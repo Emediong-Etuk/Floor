@@ -9,8 +9,11 @@ cash-out price to lock in profit, and whichever price is hit first wins.
 
 ## Status
 
-Phase 1 (contracts) is done: 68 Foundry tests, including fuzz and invariant tests, with 100%
-line coverage on `FloorOrders`. See [`PROGRESS.md`](PROGRESS.md) for live status.
+- **Contracts:** done, with 75 Foundry tests (fuzz, invariants, shared vectors, mainnet-fork). Deployed and
+  verified on Monad testnet (`docs/addresses.md`).
+- **Keeper:** done. On Monad testnet it filled a protected order **474 ms after the price
+  crashed** (`docs/keeper.md`).
+- **App:** next. See [`PROGRESS.md`](PROGRESS.md) for live status.
 
 ## How it works
 
